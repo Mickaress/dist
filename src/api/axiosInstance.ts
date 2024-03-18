@@ -5,7 +5,7 @@ const token = getAuthTokenFromCookies();
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 10000,
+  timeout: 5000,
   headers: {
     token: token,
   },
