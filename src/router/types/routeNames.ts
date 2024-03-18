@@ -1,0 +1,26 @@
+export const enum RouteNames {
+  // shared
+  VACANCIES = 'VACANCIES',
+  PROJECTS = 'PROJECTS',
+  PROJECT = 'PROJECT',
+  FAQ = 'FAQ',
+  CONTACTS = 'CONTACTS',
+  NOT_FOUND = 'NOT_FOUND',
+
+  // vacancy
+  VACANCY_DETAILS = 'VACANCY_DETAILS',
+
+  // project
+  PROJECT_DETAILS = 'PROJECT_DETAILS',
+  PROJECT_VACANCIES = 'PROJECT_VACANCIES',
+
+  // user
+  USER_PAGE = 'USER_PAGE',
+  USER_INFO = 'USER_INFO',
+  // candidate
+  RESPONSES = 'RESPONSES',
+  // supervisor
+  SUPERVISOR_PROJECTS = 'SUPERVISOR_PROJECTS',
+  // admin
+  PROJECTS_INTEREST = 'PROJECTS_INTEREST',
+}
