@@ -4,7 +4,7 @@
   import BaseInput from '@/components/ui/BaseInput.vue';
   import { useVacancyFilterStore } from '@/stores/vacancyFilter/useVacancyFilterStore';
   import { debounce } from 'lodash';
-  import { watch, ref } from 'vue';
+  import { ref, watch } from 'vue';
 
   const vacancyFilterStore = useVacancyFilterStore();
 
@@ -45,9 +45,6 @@
 
 <style lang="scss" scoped>
   .search-input {
-    width: 100%;
     max-width: 43.375rem;
-    height: 3.5625rem;
-    font-weight: 400;
   }
 </style>

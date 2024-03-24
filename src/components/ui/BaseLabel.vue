@@ -42,7 +42,7 @@
   .label-text {
     margin-bottom: 0.625rem;
     font-size: 1.125rem;
-    font-weight: 700;
+    font-weight: bold;
     cursor: default;
   }
 

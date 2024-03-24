@@ -35,7 +35,6 @@
           v-model="searchText"
           :icon="searchIconUrl"
           placeholder="Поиск по навыкам..."
-          class="search-input"
           type="text"
           inputmode="email"
           maxlength="100"
@@ -68,11 +67,6 @@
     height: 32rem;
     display: flex;
     flex-direction: column;
-  }
-  .search-input {
-    padding-top: 9px;
-    padding-bottom: 9px;
-    font-weight: 400;
   }
   .list {
     li {

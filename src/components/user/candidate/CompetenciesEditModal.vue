@@ -1,24 +1,9 @@
-<template>
-  <BaseModal :is-show="isShow" @close="onCloseModal">
-    <h1>Редактирование компетенций</h1>
-    <div class="content">
-      <BaseTextarea
-        placeholder="Например, Теория вероятностей"
-        v-model="input"
-        height="360px"
-      />
-      <BaseButton class="button" @click="saveCompetencies()">
-        Сохранить
-      </BaseButton>
-    </div>
-  </BaseModal>
-</template>
-
 <script setup lang="ts">
+  // TODO: сделать более общим и перенести в modal
   import { useUpdateCompetenciesMutation } from '@/api/CandidateApi/hooks/useUpdateCompetenciesMutation';
   import BaseButton from '@/components/ui/BaseButton.vue';
-  import BaseModal from '@/components/ui/BaseModal.vue';
   import BaseTextarea from '@/components/ui/BaseTextarea.vue';
+  import BaseModal from '@/components/ui/modal/BaseModal.vue';
   import { ref, watch } from 'vue';
 
   type Props = {
@@ -52,6 +37,22 @@
     onCloseModal();
   };
 </script>
+
+<template>
+  <BaseModal :is-show="isShow" @close="onCloseModal">
+    <h1>Редактирование компетенций</h1>
+    <div class="content">
+      <BaseTextarea
+        placeholder="Например, Теория вероятностей"
+        v-model="input"
+        height="360px"
+      />
+      <BaseButton class="button" @click="saveCompetencies()">
+        Сохранить
+      </BaseButton>
+    </div>
+  </BaseModal>
+</template>
 
 <style scoped lang="scss">
   h1 {

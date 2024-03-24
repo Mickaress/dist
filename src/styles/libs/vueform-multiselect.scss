@@ -18,6 +18,18 @@
   }
 }
 
+.multiselect-dropdown {
+  scrollbar-color: var(--dark-gray-color) transparent;
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--dark-gray-color);
+  }
+}
+
 .multiselect.is-active {
   box-shadow: none;
 }

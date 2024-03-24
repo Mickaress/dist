@@ -79,7 +79,7 @@
   }
   .title {
     font-size: 1.25rem;
-    font-weight: 700;
+    font-weight: bold;
     margin-bottom: 1rem;
   }
   .divider {

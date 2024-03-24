@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-  import { type Ref, withDefaults } from 'vue';
+  import { withDefaults, type Ref } from 'vue';
 
   type Props = {
     modelValue?: string;
@@ -42,7 +42,8 @@
     width: 100%;
     padding-left: 0.8rem;
     font-size: 1.125rem;
-    border: 0.125rem solid var(--medium-gray-color);
+    height: 2.75rem;
+    border: 1px solid var(--medium-gray-color);
     border-radius: 0.3125rem;
     transition: border 100ms ease;
     outline: none;
@@ -57,9 +58,9 @@
   }
 
   .input:disabled {
-    color: var(--gray-color-2);
+    color: var(--dark-gray-color);
     cursor: default;
-    background-color: var(--gray-color-4);
+    background-color: var(--light-gray-color);
   }
 
   .input:focus-visible {

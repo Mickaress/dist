@@ -3,16 +3,16 @@
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import arrowIconUrl from '@/assets/icons/dropdown-arrow.svg?url';
   import BaseButton from '@/components/ui/BaseButton.vue';
-  import { ref } from 'vue';
+  import { computed, ref } from 'vue';
   import UserNavigationDropdown from './UserNavigationDropdown.vue';
 
-  const authMutation = useAuthMutation();
+  const { mutate: auth } = useAuthMutation();
   const { data: userInfo } = useGetUserInfoQuery();
-  const fio = ref('');
-  if (userInfo.value) {
-    const [f, ...rest] = userInfo.value.fio.split(' ');
-    fio.value = `${f} ${rest.map((str) => str[0]).join('. ')}.`;
-  }
+
+  const fio = computed(() => {
+    const [f, ...rest] = userInfo.value?.fio.split(' ') || [];
+    return `${f} ${rest.map((str) => str[0]).join('. ')}.`;
+  });
 
   const handleMenuNode = ref<HTMLElement | undefined>(undefined);
   const isMenuOpen = ref(false);
@@ -44,7 +44,7 @@
       v-if="!userInfo"
       class="auth-btn"
       variant="text"
-      @click="authMutation.mutate()"
+      @click="auth()"
     >
       Войти
     </BaseButton>

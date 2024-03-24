@@ -1,17 +1,21 @@
 <script setup lang="ts">
+  import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import BaseBadge from '@/components/ui/BaseBadge.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import TagList from '@/components/ui/TagList.vue';
   import type { ProjectType } from '@/models/Project';
   import { StateClass } from '@/models/State';
-  import { projectRoute } from '@/router/utils/route';
+  import { createVacancyRoute, projectRoute } from '@/router/utils/route';
   import BasePanel from '../ui/BasePanel.vue';
 
   type Props = {
     project: Omit<ProjectType, 'conditions' | 'vacancies'>;
   };
 
-  defineProps<Props>();
+  const props = defineProps<Props>();
+
+  const { data: userData } = useGetUserInfoQuery();
+  console.log(props.project, userData.value?.id);
 </script>
 
 <template>
@@ -46,6 +50,14 @@
     </main>
     <footer class="footer">
       <TagList :tag-list="project.skills" />
+      <BaseButton
+        v-if="project.supervisor.id === userData?.id && project.state.id !== 2"
+        is="router-link"
+        variant="outlined"
+        :to="createVacancyRoute(project.id)"
+      >
+        Добавить вакансию
+      </BaseButton>
       <BaseButton is="router-link" :to="projectRoute(project.id)">
         Подробнее
       </BaseButton>
@@ -81,7 +93,7 @@
   }
   .main {
     p {
-      font-weight: 700;
+      font-weight: bold;
       margin-bottom: 1rem;
     }
   }

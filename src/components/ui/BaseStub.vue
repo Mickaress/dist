@@ -23,8 +23,7 @@
   }
 
   .title {
-    margin-bottom: 1rem;
-    font-weight: 700;
+    font-weight: bold;
     font-size: 1.75rem;
     line-height: 2.25rem;
     color: var(--dark-gray-color);
@@ -32,10 +31,8 @@
 
   .subtitle {
     color: var(--dark-gray-color);
+    margin: 1rem auto 2.125rem;
     max-width: 28.125rem;
-    margin-right: auto;
-    margin-bottom: 2.125rem;
-    margin-left: auto;
     font-size: 1.125rem;
     line-height: 150%;
   }

@@ -41,7 +41,7 @@
     margin-bottom: 1.0625rem;
     h1 {
       font-size: 1.125rem;
-      font-weight: 700;
+      font-weight: bold;
     }
   }
 </style>

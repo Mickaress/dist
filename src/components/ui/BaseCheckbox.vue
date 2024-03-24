@@ -64,7 +64,7 @@
     gap: 0.9375rem;
     align-items: center;
     font-size: 1.125rem;
-    font-weight: 400;
+    font-weight: normal;
     user-select: none;
   }
 

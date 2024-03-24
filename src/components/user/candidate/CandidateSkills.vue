@@ -27,7 +27,7 @@
     <p v-if="candidateData.skills.length === 0">Навыки не выбраны</p>
     <TagList v-else :tag-list="candidateData.skills" />
   </section>
-  <SkillsEditModal :userSkillIds="userSkillIds" v-model:isShow="isShowModal" />
+  <SkillsEditModal :skillIds="userSkillIds" v-model:isShow="isShowModal" />
 </template>
 
 <style lang="scss" scoped>
@@ -43,7 +43,7 @@
     margin-bottom: 1.0625rem;
     h1 {
       font-size: 1.125rem;
-      font-weight: 700;
+      font-weight: bold;
     }
   }
 </style>

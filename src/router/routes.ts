@@ -1,4 +1,5 @@
 import ContactPage from '@/pages/ContactPage.vue';
+import CreateVacancyPage from '@/pages/CreateVacancyPage.vue';
 import FaqPage from '@/pages/FaqPage.vue';
 import NotFoundPage from '@/pages/NotFoundPage.vue';
 import ProjectDetails from '@/pages/ProjectPage/ProjectDetails.vue';
@@ -9,6 +10,7 @@ import UserInfo from '@/pages/UserPage/UserInfo.vue';
 import UserPage from '@/pages/UserPage/UserPage.vue';
 import ProjectsInterest from '@/pages/UserPage/admin/ProjectsInterest.vue';
 import CandidateResponses from '@/pages/UserPage/candidate/CandidateResponses.vue';
+import SupervisorProjectVacancies from '@/pages/UserPage/supervisor/SupervisorProjectVacancies.vue';
 import SupervisorProjects from '@/pages/UserPage/supervisor/SupervisorProjects.vue';
 import VacanciesPage from '@/pages/VacanciesPage.vue';
 import VacancyPage from '@/pages/VacancyPage.vue';
@@ -32,6 +34,16 @@ export const routes: RouteRecordRaw[] = [
     name: RouteNames.VACANCY_DETAILS,
     meta: {
       title: 'О вакансии',
+    },
+  },
+  {
+    path: '/vacancy/create/:id',
+    component: CreateVacancyPage,
+    name: RouteNames.SUPERVISOR_VACANCY_PROPOSAL_CREATE,
+    meta: {
+      title: 'Создать вакансию',
+      requiresAuth: true,
+      role: ['supervisor'],
     },
   },
   {
@@ -77,7 +89,7 @@ export const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: '',
+        path: 'info',
         name: RouteNames.USER_INFO,
         component: UserInfo,
         meta: {
@@ -98,13 +110,25 @@ export const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'projects',
+        path: 'project-vacancies/:projectId?/:page?',
+        name: RouteNames.SUPERVISOR_PROJECT_VACANCIES,
+        component: SupervisorProjectVacancies,
+        meta: {
+          title: 'Вакансии',
+          type: ['user-nav'],
+          order: 1,
+          role: ['supervisor'],
+          links: [],
+        },
+      },
+      {
+        path: 'projects/:page?',
         name: RouteNames.SUPERVISOR_PROJECTS,
         component: SupervisorProjects,
         meta: {
           title: 'Мои НИОКР',
           type: ['user-nav'],
-          order: 1,
+          order: 2,
           role: ['supervisor'],
         },
       },

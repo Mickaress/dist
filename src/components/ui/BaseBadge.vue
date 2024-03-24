@@ -7,9 +7,11 @@
 <style scoped>
   .badge {
     padding: 0.5rem;
+    width: 120px;
+    text-align: center;
     font-size: 0.875rem;
     justify-self: end;
-    font-weight: 700;
+    font-weight: bold;
     text-transform: uppercase;
     border-radius: 6.25rem;
   }

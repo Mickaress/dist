@@ -7,6 +7,7 @@ export type UserRole =
   | 'admin';
 
 type SharedUserType = {
+  id: number;
   fio: string;
 };
 

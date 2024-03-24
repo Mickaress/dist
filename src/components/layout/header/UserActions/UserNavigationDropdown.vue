@@ -5,14 +5,22 @@
     :item-list="items"
     @update:is-open="(value) => emit('update:isOpen', value)"
   />
+  <ConfirmModal
+    v-model:is-show="isShowModal"
+    question="Вы уверены, что хотите выйти из аккаунта?"
+    agreeAnswer="Выйти из аккаунта"
+    disagree-answer="Остаться"
+    :agreeAction="logout"
+  />
 </template>
 
 <script setup lang="ts">
   import { useLogoutMutation } from '@/api/UserApi/hooks/useLogoutMutation';
   import DropdownList from '@/components/ui/DropdownList.vue';
+  import ConfirmModal from '@/components/ui/modal/ConfirmModal.vue';
   import { useRoleUserNavigationRoutes } from '@/hooks/useRoutes';
   import { DropdownItem } from '@/models/components/DropdownItem';
-  import { watch } from 'vue';
+  import { ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
 
   type Props = {
@@ -41,9 +49,11 @@
     type: 'link',
   }));
 
+  const isShowModal = ref<boolean>(false);
+
   items.push({
     content: 'Выйти',
     type: 'button',
-    action: logout,
+    action: () => (isShowModal.value = true),
   });
 </script>

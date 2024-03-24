@@ -45,9 +45,6 @@
 
 <style lang="scss" scoped>
   .search-input {
-    width: 100%;
     max-width: 43.375rem;
-    height: 3.5625rem;
-    font-weight: 400;
   }
 </style>

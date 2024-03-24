@@ -80,7 +80,7 @@
   }
   .main {
     p {
-      font-weight: 700;
+      font-weight: bold;
       margin-bottom: 1rem;
     }
   }

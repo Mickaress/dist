@@ -20,11 +20,11 @@
           href="https://www.istu.edu/"
           target="_blank"
         >
-          <p class="thin">
+          <p>
             Федеральное Государственное Бюджетное Образовательное Учреждение
             высшего образования
           </p>
-          <p>
+          <p class="thin">
             "Иркутский Национальный Исследовательский Технический Университет"
           </p>
         </BaseButton>
@@ -153,12 +153,11 @@
 
     p {
       color: var(--light-color);
-      font-weight: 300;
       font-size: 0.875rem;
       line-height: 1.5;
     }
     .thin {
-      font-weight: 400;
+      font-weight: normal;
     }
   }
   .nav-list {
@@ -185,7 +184,7 @@
   }
   .info-item {
     font-size: 0.875rem;
-    font-weight: 400;
+    font-weight: normal;
     color: var(--dark-gray-color);
     text-transform: uppercase;
     a {

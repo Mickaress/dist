@@ -64,7 +64,7 @@
     margin-bottom: 3.125rem;
     h1 {
       font-size: 1.125rem;
-      font-weight: 700;
+      font-weight: bold;
       margin-bottom: 1.0625rem;
     }
     &:last-child {

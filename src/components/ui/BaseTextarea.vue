@@ -62,7 +62,6 @@
     right: 1.25rem;
     bottom: 0.625rem;
     font-size: 1rem;
-    font-weight: 600;
     color: var(--dark-gray-color);
     user-select: none;
   }
@@ -70,7 +69,7 @@
   .label-text {
     margin-bottom: 0.75rem;
     font-size: 1.125rem;
-    font-weight: 700;
+    font-weight: bold;
     color: #fff;
   }
 
@@ -101,7 +100,7 @@
 
   .input::placeholder {
     font-size: 1.125rem;
-    font-weight: 400;
+    font-weight: normal;
     color: var(--dark-gray-color);
   }
 

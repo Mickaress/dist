@@ -2,7 +2,7 @@
   <component
     :is="props.is"
     :disabled="props.disabled"
-    :class="['button', props.variant]"
+    :class="['button', props.variant, props.color]"
     :style="{
       width: props.fullWidth ? '100%' : undefined,
     }"
@@ -16,12 +16,14 @@
 
   export type Variant = 'primary' | 'outlined' | 'text' | 'tag';
   export type Is = 'button' | 'router-link' | 'a';
+  export type Color = 'red';
 
   type Props = {
     variant?: Variant;
     is?: Is;
     disabled?: boolean;
     fullWidth?: boolean;
+    color?: Color;
   };
 
   const props = withDefaults(defineProps<Props>(), {
@@ -34,6 +36,10 @@
 
 <style scoped lang="scss">
   .button {
+    --main-color: var(--accent-color);
+    --dark-main-color: var(--dark-accent-color);
+    --light-main-color: var(--light-accent-color);
+
     text-transform: uppercase;
     display: inline-flex;
     gap: 0.75rem;
@@ -43,22 +49,28 @@
     cursor: pointer;
     border-radius: 0.3125rem;
     transition: 20ms ease;
+    white-space: nowrap;
+    &.red {
+      --main-color: var(--red-color);
+      --dark-main-color: var(--dark-red-color);
+      --light-main-color: var(--light-red-color);
+    }
   }
 
-  %primary {
+  .primary {
     color: var(--light-color);
-    background-color: var(--accent-color);
+    background-color: var(--main-color);
     padding: 1rem 2rem;
-    border: 0.125rem solid var(--accent-color);
+    border: 0.125rem solid var(--main-color);
 
     &:hover {
-      background-color: var(--dark-accent-color);
-      border-color: var(--dark-accent-color);
+      background-color: var(--dark-main-color);
+      border-color: var(--dark-main-color);
     }
 
     &:active {
-      background-color: var(--light-accent-color);
-      border-color: var(--light-accent-color);
+      background-color: var(--light-main-color);
+      border-color: var(--light-main-color);
     }
 
     &:disabled {
@@ -67,22 +79,22 @@
     }
   }
 
-  %outlined {
-    color: var(--accent-color);
+  .outlined {
+    color: var(--main-color);
     background-color: transparent;
-    border: 0.125rem solid var(--accent-color);
+    border: 0.125rem solid var(--main-color);
     padding: 1rem 2rem;
 
     &:hover {
       color: #fff;
-      background-color: var(--dark-accent-color);
-      border-color: var(--dark-accent-color);
+      background-color: var(--dark-main-color);
+      border-color: var(--dark-main-color);
     }
 
     &:active {
       color: #fff;
-      background-color: var(--light-accent-color);
-      border-color: var(--light-accent-color);
+      background-color: var(--light-main-color);
+      border-color: var(--light-main-color);
     }
 
     &:disabled {
@@ -91,40 +103,40 @@
     }
   }
 
-  %tag {
-    @extend %primary;
-
-    padding: 0.4375rem 1.25rem;
-    font-size: 0.875rem;
-    border-radius: 6.25rem;
-  }
-
-  %text {
-    color: var(--accent-color);
+  .text {
+    color: var(--main-color);
     background-color: transparent;
 
     &:hover {
+      color: var(--dark-main-color);
       text-decoration: underline;
     }
 
     &:active {
-      color: var(--light-accent-color);
+      color: var(--light-main-color);
     }
 
     &:disabled {
       color: var(--dark-gray-color);
     }
   }
-  .primary {
-    @extend %primary;
-  }
-  .outlined {
-    @extend %outlined;
-  }
-  .text {
-    @extend %text;
-  }
   .tag {
-    @extend %tag;
+    color: var(--light-color);
+    background-color: var(--main-color);
+    padding: 0.4375rem 1.25rem;
+    border-radius: 1.875rem;
+    text-transform: none;
+
+    &:hover {
+      background-color: var(--dark-main-color);
+    }
+
+    &:active {
+      background-color: var(--light-main-color);
+    }
+
+    &:disabled {
+      background-color: var(--dark-gray-color);
+    }
   }
 </style>

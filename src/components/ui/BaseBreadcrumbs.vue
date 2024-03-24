@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
-  import { RouterLink } from 'vue-router';
   import { Breadcrumb } from '@/models/components/BaseBreadcrumbs';
+  import { RouterLink } from 'vue-router';
 
   type Props = {
     breadcrumbs: Breadcrumb[];
@@ -30,22 +30,22 @@
   }
   .breadcrumbs-item {
     font-size: 0.875rem;
-    font-weight: 400;
+    font-weight: normal;
     span {
       color: var(--dark-gray-color);
-      font-weight: 400;
+      font-weight: normal;
     }
   }
   .breadcrumbs-item:not(:last-child)::after {
     margin-right: 0.375rem;
     margin-left: 0.375rem;
-    font-weight: 400;
+    font-weight: normal;
     color: var(--dark-color);
     content: '/';
   }
   .breadcrumbs-link {
     color: var(--dark-color);
-    font-weight: 400;
+    font-weight: normal;
     cursor: pointer;
   }
   .breadcrumbs-link:hover {

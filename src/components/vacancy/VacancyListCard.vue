@@ -1,21 +1,38 @@
 <script setup lang="ts">
   import { useCreateResponseMutation } from '@/api/CandidateApi/hooks/useCreateResponseMutation';
+  import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import TagList from '@/components/ui/TagList.vue';
   import type { VacancyType } from '@/models/Vacancy';
   import { vacancyRoute } from '@/router/utils/route';
+  import { ref } from 'vue';
+  import BasePanel from '../ui/BasePanel.vue';
+  import AuthModal from '../ui/modal/AuthModal.vue';
 
   type Props = {
     vacancy: VacancyType;
   };
-  const { mutate: createResponse } = useCreateResponseMutation();
 
   defineProps<Props>();
-  // TODO: Можно заменить на BasePanel
+
+  const { mutate: createResponse } = useCreateResponseMutation();
+
+  const { data } = useGetUserInfoQuery();
+
+  const isShowModal = ref<boolean>(false);
+
+  const response = (id: number) => {
+    if (!data.value) {
+      isShowModal.value = true;
+      return;
+    }
+
+    createResponse(id);
+  };
 </script>
 
 <template>
-  <article class="card">
+  <BasePanel>
     <header class="header">
       <RouterLink :to="vacancyRoute(vacancy.id)">
         <h1>
@@ -52,24 +69,18 @@
     </main>
     <footer class="footer">
       <TagList :tag-list="vacancy.skills" />
-      <BaseButton variant="outlined" @click="createResponse(vacancy.id)">
+      <BaseButton variant="outlined" @click="response(vacancy.id)">
         Откликнуться
       </BaseButton>
       <BaseButton is="router-link" :to="vacancyRoute(vacancy.id)">
         Подробнее
       </BaseButton>
     </footer>
-  </article>
+  </BasePanel>
+  <AuthModal v-model:is-show="isShowModal" />
 </template>
 
 <style lang="scss" scoped>
-  .card {
-    width: 100%;
-    background-color: var(--light-color);
-    border-radius: 0.625rem;
-    padding: 1.375rem;
-    box-shadow: 0 0 0.3125rem rgb(0 0 0 / 18%);
-  }
   .header {
     h1 {
       font-size: 1.5rem;
@@ -97,7 +108,7 @@
   }
   .main {
     p {
-      font-weight: 700;
+      font-weight: bold;
       margin-bottom: 1rem;
     }
   }

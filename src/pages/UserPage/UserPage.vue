@@ -24,20 +24,9 @@
 
     h1 {
       font-size: 2.25rem;
-      font-weight: 700;
+      font-weight: bold;
       margin-top: 1.6875rem;
       margin-bottom: 1.875rem;
-    }
-  }
-  .info {
-    h1 {
-      font-weight: 400;
-      font-size: 1.125rem;
-      margin-bottom: 0.625rem;
-    }
-    p {
-      font-size: 1.125rem;
-      font-weight: 700;
     }
   }
 </style>

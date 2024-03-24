@@ -26,8 +26,8 @@
 </template>
 
 <script setup lang="ts">
-  import { RouterLink } from 'vue-router';
   import { DropdownItem } from '@/models/components/DropdownItem';
+  import { RouterLink } from 'vue-router';
   import BaseDropdown, { Position } from './BaseDropdown.vue';
 
   type Props = {
@@ -64,7 +64,6 @@
     font-family: Mont, Arial, Helvetica, sans-serif;
     font-size: 1rem;
     font-style: normal;
-    font-weight: 600;
     line-height: 1.25rem;
     color: var(--text-color);
     text-align: left;

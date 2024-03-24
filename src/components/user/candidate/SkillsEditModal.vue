@@ -1,33 +1,10 @@
-<template>
-  <BaseModal :is-show="isShow" @close="onCloseModal">
-    <h1>Редактирование навыков</h1>
-    <div class="skills">
-      <h2>Выбранные навыки</h2>
-      <TagList
-        v-if="userSkills?.length"
-        :tag-list="userSkills"
-        :is-visible="true"
-        deletable
-        :deleteFunc="deleteSkill"
-      />
-      <p v-else>Навыки не выбраны</p>
-    </div>
-    <div class="cols">
-      <AddSkill :skills="notUserSkills" :addSkillFunc="addSkill" />
-      <OfferSkill />
-    </div>
-    <div class="btn">
-      <BaseButton @click="saveSkills()">Сохранить</BaseButton>
-    </div>
-  </BaseModal>
-</template>
-
 <script setup lang="ts">
+  // TODO: сделать более общим и перенести в modal
   import { useUpdateSkillsMutation } from '@/api/CandidateApi/hooks/useUpdateSkillsMutation';
   import { useGetAllSkillsQuery } from '@/api/SkillApi/hooks/useGetAllSkillsQuery';
   import BaseButton from '@/components/ui/BaseButton.vue';
-  import BaseModal from '@/components/ui/BaseModal.vue';
   import TagList from '@/components/ui/TagList.vue';
+  import BaseModal from '@/components/ui/modal/BaseModal.vue';
   import { computed, ref, watch } from 'vue';
   import AddSkill from './AddSkill.vue';
   import OfferSkill from './OfferSkill.vue';
@@ -36,7 +13,7 @@
 
   type Props = {
     isShow: boolean;
-    userSkillIds: number[];
+    skillIds: number[];
   };
   const props = defineProps<Props>();
 
@@ -49,12 +26,12 @@
     emit('update:isShow', false);
   }
 
-  const userSkillIds = ref(props.userSkillIds);
+  const userSkillIds = ref(props.skillIds);
 
   watch(
     () => props.isShow,
     () => {
-      userSkillIds.value = props.userSkillIds;
+      userSkillIds.value = props.skillIds;
     },
   );
 
@@ -87,6 +64,30 @@
     onCloseModal();
   };
 </script>
+
+<template>
+  <BaseModal :is-show="isShow" @close="onCloseModal">
+    <h1>Редактирование навыков</h1>
+    <div class="skills">
+      <h2>Выбранные навыки</h2>
+      <TagList
+        v-if="userSkills?.length"
+        :tag-list="userSkills"
+        :is-visible="true"
+        deletable
+        :deleteFunc="deleteSkill"
+      />
+      <p v-else>Навыки не выбраны</p>
+    </div>
+    <div class="cols">
+      <AddSkill :skills="notUserSkills" :addSkillFunc="addSkill" />
+      <OfferSkill />
+    </div>
+    <div class="btn">
+      <BaseButton @click="saveSkills()">Сохранить</BaseButton>
+    </div>
+  </BaseModal>
+</template>
 
 <style scoped lang="scss">
   h1 {

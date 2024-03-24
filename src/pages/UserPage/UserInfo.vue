@@ -55,10 +55,9 @@
     flex-direction: column;
     h1 {
       font-size: 1.875rem;
-      font-weight: 700;
+      font-weight: bold;
       margin-bottom: 1.5rem;
       padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--medium-gray-color);
     }
     a {
       align-self: flex-end;

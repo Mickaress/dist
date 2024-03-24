@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
   import closeIconUrl from '@/assets/icons/close.svg?url';
-  import BasePanel from './BasePanel.vue';
+  import BasePanel from '../BasePanel.vue';
   type Emits = {
     (e: 'close'): void;
   };

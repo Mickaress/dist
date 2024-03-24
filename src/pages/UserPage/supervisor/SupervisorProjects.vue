@@ -6,13 +6,16 @@
   import BaseStub from '@/components/ui/BaseStub.vue';
   import { useSupervisorProjectFilterStore } from '@/stores/supervisorProjectFilter/useProjectFilterStore';
 
-  const supervisorProjectsQuery = useGetSupervisorProjectsQuery();
+  const {
+    data: projectsData,
+    isLoading,
+    isError,
+  } = useGetSupervisorProjectsQuery();
 
   const supervisorProjectFilterStore = useSupervisorProjectFilterStore();
 
   const setPage = (newPage: number) => {
     supervisorProjectFilterStore.updateFilters({ page: newPage });
-    console.log(newPage);
     window.scrollTo({
       top: 0,
     });
@@ -20,23 +23,23 @@
 </script>
 
 <template>
-  <CardsLoading v-if="supervisorProjectsQuery.isLoading.value" />
+  <CardsLoading v-if="isLoading" />
   <BaseStub
-    v-if="supervisorProjectsQuery.isError.value"
+    v-if="isError"
     title="Ошибка сервера"
     subtitle="В данный момент сервер не отвечает"
   >
   </BaseStub>
   <BaseStub
-    v-if="supervisorProjectsQuery.data.value?.projectsCount === 0"
+    v-if="projectsData?.projectsCount === 0"
     title="НИОКР не найдены"
     subtitle="Пока нет ни одного НИОКР с введённым названием и/или выбранными фильтрами"
   >
   </BaseStub>
-  <template v-if="supervisorProjectsQuery.data.value">
-    <ProjectList :projectList="supervisorProjectsQuery.data.value?.projects" />
+  <template v-else-if="projectsData">
+    <ProjectList :projectList="projectsData.projects" />
     <BasePagination
-      :total-items="supervisorProjectsQuery.data.value?.projectsCount || 1"
+      :total-items="projectsData.projectsCount || 1"
       :setPage="setPage"
       :currentPage="supervisorProjectFilterStore.page"
     />
