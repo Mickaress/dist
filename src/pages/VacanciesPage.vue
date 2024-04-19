@@ -42,24 +42,24 @@
         subtitle="В данный момент сервер не отвечает"
       >
       </BaseStub>
-      <BaseStub
-        v-if="vacancyListQuery.data.value?.vacancyCount === 0"
-        title="Вакансии не найдены"
-        subtitle="Пока нет ни одной вакансии с введённым названием и/или выбранными фильтрами"
-      >
-        <template #button>
-          <BaseButton @click="vacancyFilterStore.clearFilter()">
-            Сбросить фильтры
-          </BaseButton>
+      <template v-if="vacancyListQuery.data.value">
+        <BaseStub
+          v-if="vacancyListQuery.data.value?.vacancyCount === 0"
+          title="Вакансии не найдены"
+          subtitle="Пока нет ни одной вакансии с введённым названием и/или выбранными фильтрами"
+        >
+          <template #button>
+            <BaseButton @click="vacancyFilterStore.clearFilter()"> Сбросить фильтры </BaseButton>
+          </template>
+        </BaseStub>
+        <template v-else>
+          <VacancyList :vacancyList="vacancyListQuery.data.value?.vacancies" />
+          <BasePagination
+            :total-items="vacancyListQuery.data.value?.vacancyCount || 1"
+            :setPage="setPage"
+            :currentPage="vacancyFilterStore.page"
+          />
         </template>
-      </BaseStub>
-      <template v-else>
-        <VacancyList :vacancyList="vacancyListQuery.data.value?.vacancies" />
-        <BasePagination
-          :total-items="vacancyListQuery.data.value?.vacancyCount || 1"
-          :setPage="setPage"
-          :currentPage="vacancyFilterStore.page"
-        />
       </template>
     </template>
   </SidebarLayout>

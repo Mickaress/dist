@@ -2,12 +2,15 @@
   import { useCreateResponseMutation } from '@/api/CandidateApi/hooks/useCreateResponseMutation';
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import BaseButton from '@/components/ui/BaseButton.vue';
-  import TagList from '@/components/ui/TagList.vue';
+  import { StateClass, StateID } from '@/models/State';
   import type { VacancyType } from '@/models/Vacancy';
-  import { vacancyRoute } from '@/router/utils/route';
+  import { toVacancyResponses, vacancyRoute } from '@/router/utils/route';
   import { ref } from 'vue';
+  import BaseBadge from '../ui/BaseBadge.vue';
   import BasePanel from '../ui/BasePanel.vue';
+  import SkillList from '../ui/SkillList.vue';
   import AuthModal from '../ui/modal/AuthModal.vue';
+  import InformationModal from '../ui/modal/InformationModal.vue';
 
   type Props = {
     vacancy: VacancyType;
@@ -17,13 +20,14 @@
 
   const { mutate: createResponse } = useCreateResponseMutation();
 
-  const { data } = useGetUserInfoQuery();
+  const { data: userData } = useGetUserInfoQuery();
 
-  const isShowModal = ref<boolean>(false);
+  const isShowAuthModal = ref<boolean>(false);
+  const isShowCommentModal = ref<boolean>(false);
 
   const response = (id: number) => {
-    if (!data.value) {
-      isShowModal.value = true;
+    if (!userData.value) {
+      isShowAuthModal.value = true;
       return;
     }
 
@@ -39,6 +43,9 @@
           {{ vacancy.title }}
         </h1>
       </RouterLink>
+      <BaseBadge :class="StateClass[vacancy.state.id]">
+        {{ vacancy.state.state }}
+      </BaseBadge>
       <h2>
         {{ vacancy.project.title }}
       </h2>
@@ -62,29 +69,58 @@
       </p>
       <p>
         Оплата:
-        <span>{{
-          vacancy.salary === 0 ? 'Бесплатно' : `${vacancy.salary} ₽`
-        }}</span>
+        <span>{{ vacancy.salary === 0 ? 'Без оплаты' : `${vacancy.salary} ₽` }}</span>
       </p>
     </main>
     <footer class="footer">
-      <TagList :tag-list="vacancy.skills" />
-      <BaseButton variant="outlined" @click="response(vacancy.id)">
-        Откликнуться
-      </BaseButton>
-      <BaseButton is="router-link" :to="vacancyRoute(vacancy.id)">
-        Подробнее
-      </BaseButton>
+      <SkillList :skill-ids="vacancy.skills" />
+      <div class="buttons">
+        <template v-if="userData">
+          <template v-if="userData.id === vacancy.project.supervisor.id">
+            <BaseButton
+              v-if="vacancy.state.id === StateID.Active"
+              variant="outlined"
+              is="router-link"
+              :to="toVacancyResponses(vacancy.id)"
+            >
+              Отклики
+            </BaseButton>
+            <template v-if="vacancy.state.id === StateID.Rejected">
+              <BaseButton variant="outlined">Редактировать</BaseButton>
+              <BaseButton color="red" @click="isShowCommentModal = true">Причина</BaseButton>
+            </template>
+          </template>
+          <BaseButton v-else variant="outlined" @click="response(vacancy.id)">
+            Откликнуться
+          </BaseButton>
+        </template>
+        <BaseButton
+          v-if="vacancy.state.id === StateID.Active"
+          is="router-link"
+          :to="vacancyRoute(vacancy.id)"
+        >
+          Подробнее
+        </BaseButton>
+      </div>
     </footer>
   </BasePanel>
-  <AuthModal v-model:is-show="isShowModal" />
+  <AuthModal v-model:is-show="isShowAuthModal" />
+  <InformationModal
+    title="Причина отклонения заявки"
+    :text="vacancy.comment"
+    v-model:is-show="isShowCommentModal"
+  />
 </template>
 
 <style lang="scss" scoped>
   .header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
     h1 {
       font-size: 1.5rem;
-      margin-bottom: 0.75rem;
 
       &:hover {
         text-decoration: underline;
@@ -93,11 +129,11 @@
     h2 {
       font-size: 1.25rem;
       font-weight: normal;
-      margin-bottom: 0.5rem;
+      grid-column: 1 / -1;
     }
     p {
       font-weight: normal;
-      margin-bottom: 0.75rem;
+      grid-column: 1 / -1;
     }
   }
   .divider {
@@ -114,6 +150,12 @@
   }
   .footer {
     display: flex;
+    justify-content: space-between;
     gap: 0.25rem;
+    align-items: end;
+  }
+  .buttons {
+    display: flex;
+    gap: 8px;
   }
 </style>

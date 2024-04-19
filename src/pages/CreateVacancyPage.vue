@@ -5,9 +5,9 @@
   import BasePanel from '@/components/ui/BasePanel.vue';
   import BaseTextarea from '@/components/ui/BaseTextarea.vue';
   import FormSection from '@/components/ui/FormSection.vue';
-  import TagList from '@/components/ui/TagList.vue';
-  import SkillsEditModal from '@/components/user/candidate/SkillsEditModal.vue';
-  import { ref } from 'vue';
+  import SkillList from '@/components/ui/SkillList.vue';
+  import SkillsEditModal from '@/components/ui/modal/editSkillModal/SkillsEditModal.vue';
+  import { ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
 
   const route = useRoute();
@@ -15,7 +15,11 @@
   const projectId = Number(route.params.id);
 
   const { data: project } = useGetSingleProjectQuery(projectId);
-  const skills = ref<number[]>([]);
+  const selectedSkillIds = ref<number[]>([]);
+  watch(
+    () => selectedSkillIds.value,
+    () => console.log(selectedSkillIds.value),
+  );
   const isShowModal = ref<boolean>(false);
 
   // TODO: Изменение навыков так и не работает, надо подумать как пофиксить
@@ -60,31 +64,31 @@
         </div>
         <div>
           <h1 class="header">Требования</h1>
-          <BaseTextarea
-            placeholder="Например, знание основ верстки и дизайна веб-страниц."
-          />
+          <BaseTextarea placeholder="Например, знание основ верстки и дизайна веб-страниц." />
         </div>
         <div>
           <h1 class="header">Условия</h1>
-          <BaseTextarea
-            placeholder="Например, полный день, полная занятость."
-          />
+          <BaseTextarea placeholder="Например, полный день, полная занятость." />
         </div>
       </div>
     </FormSection>
     <FormSection tag="4" title="Навыки">
       <h1 class="header">Навыки</h1>
-      <TagList :tag-list="[]" />
-      <BaseButton variant="tag" @click="isShowModal = true">
-        Редактировать навыки +
-      </BaseButton>
+      <div class="wrapper">
+        <SkillList :skill-ids="selectedSkillIds" />
+        <BaseButton variant="tag" @click="isShowModal = true"> Редактировать навыки + </BaseButton>
+      </div>
     </FormSection>
   </BasePanel>
   <div class="buttons">
     <BaseButton variant="outlined" color="red">Сбросить и выйти</BaseButton>
     <BaseButton>Подать заявку</BaseButton>
   </div>
-  <SkillsEditModal :skillIds="skills" v-model:isShow="isShowModal" />
+  <SkillsEditModal
+    :skillIds="selectedSkillIds"
+    v-model:isShow="isShowModal"
+    :save-function="(skillIds) => (selectedSkillIds = skillIds)"
+  />
 </template>
 
 <style lang="scss" scoped>
@@ -132,5 +136,9 @@
     justify-content: end;
     gap: 1rem;
     margin-top: 40px;
+  }
+  .wrapper {
+    display: flex;
+    gap: 0.5rem;
   }
 </style>

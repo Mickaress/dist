@@ -23,7 +23,7 @@
             <template #content>
               <ul class="list">
                 <li
-                  v-for="childLink in projectsData?.projects"
+                  v-for="childLink in projects"
                   :key="childLink.id"
                   class="item"
                 >
@@ -76,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-  import { useGetSupervisorProjectsQuery } from '@/api/SupervisorApi/hooks/useGetSupervisorProjectsQuery';
+  import { useGetSupervisorActiveProjectsQuery } from '@/api/SupervisorApi/hooks/useGetSupervisorActiveProjectsQuery';
   import { useLogoutMutation } from '@/api/UserApi/hooks/useLogoutMutation';
   import { useRoleUserNavigationRoutes } from '@/hooks/useRoutes';
   import { toProjectVacancies } from '@/router/utils/route';
@@ -90,7 +90,7 @@
 
   const { mutate: logout } = useLogoutMutation();
 
-  const { data: projectsData } = useGetSupervisorProjectsQuery();
+  const { data: projects } = useGetSupervisorActiveProjectsQuery();
 </script>
 
 <style lang="scss" scoped>

@@ -118,6 +118,7 @@
     background: url('@/assets/icons/dropdown-arrow.svg') center / cover
       no-repeat;
     transform: rotate(180deg);
+    cursor: pointer;
   }
 
   .accordion.opened .icon {

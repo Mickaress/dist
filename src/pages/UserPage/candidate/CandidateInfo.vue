@@ -3,14 +3,38 @@
   import GridLayout from '@/components/ui/GridLayout.vue';
   import CandidateCompetencies from '@/components/user/candidate/CandidateCompetencies.vue';
   import CandidateSkills from '@/components/user/candidate/CandidateSkills.vue';
-  import { EmployeeCandidateType } from '@/models/User';
+  import { CandidateType } from '@/models/User';
 
   type Props = {
-    userInfo: EmployeeCandidateType;
+    userInfo: CandidateType;
   };
 
-  defineProps<Props>();
-  // TODO: объединить candidate
+  const props = defineProps<Props>();
+
+  const items = [
+    {
+      title: 'Институт:',
+      content: `${props.userInfo.institute}`,
+    },
+  ];
+  if (props.userInfo.group) {
+    items.push({
+      title: 'Группа:',
+      content: `${props.userInfo.group}`,
+    });
+  }
+  if (props.userInfo.birthday) {
+    items.push({
+      title: 'День рождения:',
+      content: `${props.userInfo.birthday}`,
+    });
+  }
+  if (props.userInfo.post) {
+    items.push({
+      title: 'Должность: ',
+      content: `${props.userInfo.post}`,
+    });
+  }
 </script>
 
 <template>
@@ -34,18 +58,7 @@
       </section>
       <section class="section">
         <h1>Дополнительная информация</h1>
-        <AppList
-          :items="[
-            {
-              title: 'Институт:',
-              content: `${userInfo.institute}`,
-            },
-            {
-              title: 'Должность:',
-              content: `${userInfo.post}`,
-            },
-          ]"
-        />
+        <AppList class="app-list" :items="items" />
       </section>
     </div>
     <div>
@@ -68,7 +81,7 @@
     }
   }
   .app-list {
-    &:deep(.info-list-title) {
+    &:deep(h1) {
       color: var(--dark-gray-color);
     }
   }

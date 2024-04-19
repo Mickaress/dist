@@ -18,19 +18,14 @@
     Pick<VacancyType, 'id' | 'title' | 'salary' | 'responsibilities'>[]
   >(() => {
     if (!project.value) return [];
-    const vacancies = [...project.value.vacancies].sort((a, b) =>
-      a.title.localeCompare(b.title),
-    );
+    const vacancies = [...project.value.vacancies].sort((a, b) => a.title.localeCompare(b.title));
     return vacancies;
   });
 </script>
 
 <template>
   <BasePanel>
-    <BaseStub
-      v-if="project?.vacancies.length === 0"
-      title="У этого НИОКР нет вакансий"
-    ></BaseStub>
+    <BaseStub v-if="project?.vacancies.length === 0" title="У этого НИОКР нет вакансий"></BaseStub>
     <BaseTable
       v-else-if="project"
       class="table"
@@ -44,14 +39,12 @@
         </td>
         <td class="data">{{ row.responsibilities }}</td>
         <td class="data">
-          {{ row.salary === 0 ? 'Бесплатно' : `${row.salary} ₽` }}
+          {{ row.salary === 0 ? 'Без оплаты' : `${row.salary} ₽` }}
         </td>
         <td>
           <div class="buttons">
             <BaseButton variant="outlined">Откликнуться</BaseButton>
-            <BaseButton is="router-link" :to="vacancyRoute(row.id)">
-              Подробнее
-            </BaseButton>
+            <BaseButton is="router-link" :to="vacancyRoute(row.id)"> Подробнее </BaseButton>
           </div>
         </td>
       </tr>

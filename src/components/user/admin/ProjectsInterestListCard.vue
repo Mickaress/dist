@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import BaseBadge from '@/components/ui/BaseBadge.vue';
-  import TagList from '@/components/ui/TagList.vue';
+  import SkillList from '@/components/ui/SkillList.vue';
   import type { ProjectType } from '@/models/Project';
   import { StateClass } from '@/models/State';
   import { projectRoute } from '@/router/utils/route';
@@ -22,9 +22,7 @@
             {{ project.title }}
           </h1>
         </RouterLink>
-        <BaseBadge :class="StateClass[project.state.id]">{{
-          project.state.state
-        }}</BaseBadge>
+        <BaseBadge :class="StateClass[project.state.id]">{{ project.state.state }}</BaseBadge>
       </div>
       <p>
         {{ project.supervisor.fio }}
@@ -38,7 +36,7 @@
       </p>
     </main>
     <footer class="footer">
-      <TagList :tag-list="project.skills" />
+      <SkillList :tag-list="project.skills" />
       <p class="views">Просмотров: {{ project.views }}</p>
     </footer>
   </article>

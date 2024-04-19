@@ -2,20 +2,19 @@
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import BaseBadge from '@/components/ui/BaseBadge.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
-  import TagList from '@/components/ui/TagList.vue';
   import type { ProjectType } from '@/models/Project';
   import { StateClass } from '@/models/State';
   import { createVacancyRoute, projectRoute } from '@/router/utils/route';
   import BasePanel from '../ui/BasePanel.vue';
+  import SkillList from '../ui/SkillList.vue';
 
   type Props = {
     project: Omit<ProjectType, 'conditions' | 'vacancies'>;
   };
 
-  const props = defineProps<Props>();
+  defineProps<Props>();
 
   const { data: userData } = useGetUserInfoQuery();
-  console.log(props.project, userData.value?.id);
 </script>
 
 <template>
@@ -49,18 +48,18 @@
       </p>
     </main>
     <footer class="footer">
-      <TagList :tag-list="project.skills" />
-      <BaseButton
-        v-if="project.supervisor.id === userData?.id && project.state.id !== 2"
-        is="router-link"
-        variant="outlined"
-        :to="createVacancyRoute(project.id)"
-      >
-        Добавить вакансию
-      </BaseButton>
-      <BaseButton is="router-link" :to="projectRoute(project.id)">
-        Подробнее
-      </BaseButton>
+      <SkillList :skill-ids="project.skills" />
+      <div class="buttons">
+        <BaseButton
+          v-if="project.supervisor.id === userData?.id && project.state.id !== 2"
+          is="router-link"
+          variant="outlined"
+          :to="createVacancyRoute(project.id)"
+        >
+          Добавить вакансию
+        </BaseButton>
+        <BaseButton is="router-link" :to="projectRoute(project.id)"> Подробнее </BaseButton>
+      </div>
     </footer>
   </BasePanel>
 </template>
@@ -71,6 +70,7 @@
     grid-template-columns: auto 1fr;
     align-items: start;
     gap: 1rem;
+    margin-bottom: 0.75rem;
     h1 {
       font-size: 1.5rem;
       margin-bottom: 0.75rem;
@@ -81,7 +81,6 @@
     }
     p {
       font-weight: normal;
-      margin-bottom: 0.75rem;
       grid-column: 1 / -1;
     }
   }
@@ -99,6 +98,12 @@
   }
   .footer {
     display: flex;
+    justify-content: space-between;
     gap: 0.25rem;
+    align-items: end;
+  }
+  .buttons {
+    display: flex;
+    gap: 8px;
   }
 </style>

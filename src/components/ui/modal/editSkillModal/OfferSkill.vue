@@ -4,16 +4,29 @@
     <section class="block">
       <h2>Название навыка</h2>
       <form>
-        <BaseTextarea placeholder="Например, Теория вероятностей" />
-        <BaseButton variant="outlined"> Добавить навык </BaseButton>
+        <BaseTextarea placeholder="Например, Теория вероятностей" v-model="input" />
+        <BaseButton variant="outlined" type="button" @click="offerNewSkill">
+          Добавить навык
+        </BaseButton>
       </form>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
+  import { useOfferSkillMutation } from '@/api/CandidateApi/hooks/useOfferSkillMutation';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import BaseTextarea from '@/components/ui/BaseTextarea.vue';
+  import { ref } from 'vue';
+
+  const { mutate: offerSkill } = useOfferSkillMutation();
+
+  const offerNewSkill = () => {
+    input.value = '';
+    offerSkill(input.value);
+  };
+
+  const input = ref('');
 </script>
 
 <style scoped lang="scss">

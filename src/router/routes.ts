@@ -1,4 +1,5 @@
 import ContactPage from '@/pages/ContactPage.vue';
+import CreateProjectPage from '@/pages/CreateProjectPage.vue';
 import CreateVacancyPage from '@/pages/CreateVacancyPage.vue';
 import FaqPage from '@/pages/FaqPage.vue';
 import NotFoundPage from '@/pages/NotFoundPage.vue';
@@ -9,9 +10,12 @@ import ProjectsPage from '@/pages/ProjectsPage.vue';
 import UserInfo from '@/pages/UserPage/UserInfo.vue';
 import UserPage from '@/pages/UserPage/UserPage.vue';
 import ProjectsInterest from '@/pages/UserPage/admin/ProjectsInterest.vue';
+import SkillOffers from '@/pages/UserPage/admin/SkillOffers.vue';
+import VacancyOffers from '@/pages/UserPage/admin/VacancyOffers.vue';
 import CandidateResponses from '@/pages/UserPage/candidate/CandidateResponses.vue';
 import SupervisorProjectVacancies from '@/pages/UserPage/supervisor/SupervisorProjectVacancies.vue';
 import SupervisorProjects from '@/pages/UserPage/supervisor/SupervisorProjects.vue';
+import SupervisorVacancyResponses from '@/pages/UserPage/supervisor/SupervisorVacancyResponses.vue';
 import VacanciesPage from '@/pages/VacanciesPage.vue';
 import VacancyPage from '@/pages/VacancyPage.vue';
 import type { RouteRecordRaw } from 'vue-router';
@@ -39,11 +43,21 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/vacancy/create/:id',
     component: CreateVacancyPage,
-    name: RouteNames.SUPERVISOR_VACANCY_PROPOSAL_CREATE,
+    name: RouteNames.SUPERVISOR_VACANCY_CREATE,
     meta: {
       title: 'Создать вакансию',
       requiresAuth: true,
       role: ['supervisor'],
+    },
+  },
+  {
+    path: '/project/create',
+    name: RouteNames.ADMIN_PROJECT_CREATE,
+    component: CreateProjectPage,
+    meta: {
+      title: 'Создать НИОКР',
+      requiresAuth: true,
+      role: ['admin'],
     },
   },
   {
@@ -110,7 +124,7 @@ export const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'project-vacancies/:projectId?/:page?',
+        path: 'project-vacancies/:projectId?',
         name: RouteNames.SUPERVISOR_PROJECT_VACANCIES,
         component: SupervisorProjectVacancies,
         meta: {
@@ -122,7 +136,16 @@ export const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'projects/:page?',
+        path: 'vacancy-responses/:filterBy?',
+        name: RouteNames.SUPERVISOR_VACANCY_RESPONSES,
+        component: SupervisorVacancyResponses,
+        meta: {
+          title: 'Отклики',
+          role: ['supervisor'],
+        },
+      },
+      {
+        path: 'projects',
         name: RouteNames.SUPERVISOR_PROJECTS,
         component: SupervisorProjects,
         meta: {
@@ -133,13 +156,34 @@ export const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'vacancy-offers',
+        name: RouteNames.ADMIN_VACANCY_OFFER,
+        component: VacancyOffers,
+        meta: {
+          title: 'Заявки на вакансии',
+          type: ['user-nav'],
+          order: 1,
+          role: ['admin'],
+        },
+      },
+      {
+        path: 'skill-offers',
+        name: RouteNames.ADMIN_SKILL_OFFER,
+        component: SkillOffers,
+        meta: {
+          title: 'Заявки на навыки',
+          type: ['user-nav'],
+          order: 1,
+          role: ['admin'],
+        },
+      },
+      {
         path: 'projects_interest',
         name: RouteNames.PROJECTS_INTEREST,
         component: ProjectsInterest,
         meta: {
           title: 'Заинтересованность в НИОКР',
-          type: ['user-nav'],
-          order: 1,
+          order: 2,
           role: ['admin'],
         },
       },

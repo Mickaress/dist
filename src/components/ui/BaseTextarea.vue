@@ -1,32 +1,10 @@
-<template>
-  <label class="label">
-    <textarea
-      v-bind="$attrs"
-      :value="props.modelValue"
-      :class="['input', { 'with-maxlength': isMaxLength }]"
-      @input="onInput"
-      :style="{ height: props.height ? props.height : '108px' }"
-    >
-    </textarea>
-    <span v-if="isMaxLength" class="maxlength">
-      {{ props.modelValue.length || 0 }}/{{ $attrs.maxlength }}
-    </span>
-  </label>
-</template>
-
 <script setup lang="ts">
-  import {
-    Ref,
-    TextareaHTMLAttributes,
-    computed,
-    useAttrs,
-    withDefaults,
-  } from 'vue';
+  import { Ref, TextareaHTMLAttributes, computed, useAttrs, withDefaults } from 'vue';
 
   type Props = {
     modelValue?: string;
     textareaRef?: Ref<TextareaHTMLAttributes | null>;
-    height?: string;
+    height?: number;
   };
 
   interface Emits {
@@ -35,13 +13,12 @@
 
   const props = withDefaults(defineProps<Props>(), {
     modelValue: '',
+    height: 7,
   });
   const emit = defineEmits<Emits>();
   const attrs = useAttrs();
   const isMaxLength = computed(
-    () =>
-      typeof attrs.maxlength === 'number' ||
-      typeof attrs.maxlength === 'string',
+    () => typeof attrs.maxlength === 'number' || typeof attrs.maxlength === 'string',
   );
 
   function onInput(e: Event) {
@@ -49,6 +26,22 @@
     emit('update:modelValue', target.value);
   }
 </script>
+
+<template>
+  <label class="label">
+    <textarea
+      v-bind="$attrs"
+      :value="props.modelValue"
+      :class="['input', { 'with-maxlength': isMaxLength }]"
+      @input="onInput"
+      :style="{ height: height + 'rem' }"
+    >
+    </textarea>
+    <span v-if="isMaxLength" class="maxlength">
+      {{ props.modelValue.length || 0 }}/{{ $attrs.maxlength }}
+    </span>
+  </label>
+</template>
 
 <style scoped>
   .label {

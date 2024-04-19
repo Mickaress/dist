@@ -2,48 +2,26 @@
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import BasePanel from '@/components/ui/BasePanel.vue';
-  import {
-    AdminType,
-    EmployeeCandidateType,
-    StudentCandidateType,
-    SupervisorType,
-  } from '@/models/User';
+  import { AdminType, CandidateType, SupervisorType } from '@/models/User';
   import AdminInfo from './admin/AdminInfo.vue';
-  import EmployeeCandidateInfo from './candidate/EmployeeCandidateInfo.vue';
-  import StudentCandidateInfo from './candidate/StudentCandidateInfo.vue';
+  import CandidateInfo from './candidate/CandidateInfo.vue';
   import SupervisorInfo from './supervisor/SupervisorInfo.vue';
 
   const { data } = useGetUserInfoQuery();
 
   // TODO: Костыль
-  const StudentCandidateData = data.value as StudentCandidateType;
-  const EmployeeCandidateData = data.value as EmployeeCandidateType;
+  const CandidateData = data.value as CandidateType;
   const SupervisorData = data.value as SupervisorType;
   const AdminData = data.value as AdminType;
 </script>
 
 <template>
-  <BasePanel class="info">
-    <h1 class="fio">{{ data?.fio }}</h1>
-    <StudentCandidateInfo
-      v-if="StudentCandidateData.birthday"
-      :user-info="StudentCandidateData"
-    />
-    <EmployeeCandidateInfo
-      v-else-if="EmployeeCandidateData.post"
-      :user-info="EmployeeCandidateData"
-    />
-    <SupervisorInfo
-      v-else-if="SupervisorData.phone"
-      :user-info="SupervisorData"
-    />
+  <BasePanel v-if="data" class="info">
+    <h1 class="fio">{{ data.fio }}</h1>
+    <CandidateInfo v-if="CandidateData.institute" :user-info="CandidateData" />
+    <SupervisorInfo v-else-if="SupervisorData.phone" :user-info="SupervisorData" />
     <AdminInfo v-else :user-info="AdminData" />
-    <BaseButton
-      variant="outlined"
-      is="a"
-      href="https://int.istu.edu/"
-      target="_blank"
-    >
+    <BaseButton variant="outlined" is="a" href="https://int.istu.edu/" target="_blank">
       Редактировать профиль
     </BaseButton>
   </BasePanel>

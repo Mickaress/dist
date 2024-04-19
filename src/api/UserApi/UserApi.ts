@@ -1,9 +1,4 @@
-import {
-  AdminType,
-  EmployeeCandidateType,
-  StudentCandidateType,
-  SupervisorType,
-} from '@/models/User';
+import { AdminType, CandidateType, SupervisorType } from '@/models/User';
 import { axiosInstance } from '../axiosInstance';
 import UserApiType from './UserApiType';
 import { askForUserRole, setUserToCookies } from './utils/mockCookie';
@@ -32,13 +27,7 @@ export default class UserApi implements UserApiType {
     await axiosInstance.get('logout');
   }
 
-  async getUserInfo(): Promise<
-    | StudentCandidateType
-    | EmployeeCandidateType
-    | SupervisorType
-    | AdminType
-    | null
-  > {
+  async getUserInfo(): Promise<CandidateType | SupervisorType | AdminType | null> {
     try {
       const response = await axiosInstance.get('user');
 

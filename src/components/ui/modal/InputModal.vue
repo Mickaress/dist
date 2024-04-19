@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  // TODO: сделать более общим и перенести в modal
-  import { useUpdateCompetenciesMutation } from '@/api/CandidateApi/hooks/useUpdateCompetenciesMutation';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import BaseTextarea from '@/components/ui/BaseTextarea.vue';
   import BaseModal from '@/components/ui/modal/BaseModal.vue';
@@ -8,8 +6,13 @@
 
   type Props = {
     isShow: boolean;
-    competencies: string;
+    title: string;
+    baseText: string;
+    placeholder: string;
+    submitFunction: (text: string) => void;
+    submitText: string;
   };
+
   const props = defineProps<Props>();
 
   type Emits = {
@@ -17,39 +20,31 @@
   };
   const emit = defineEmits<Emits>();
 
-  function onCloseModal() {
+  const onCloseModal = () => {
     emit('update:isShow', false);
-  }
+  };
 
-  const input = ref(props.competencies);
+  const input = ref(props.baseText);
 
   watch(
     () => props.isShow,
     () => {
-      input.value = props.competencies;
+      input.value = props.baseText;
     },
   );
 
-  const { mutate: updateCompetencies } = useUpdateCompetenciesMutation();
-
-  const saveCompetencies = () => {
-    updateCompetencies(input.value);
+  const onSubmit = () => {
+    props.submitFunction(input.value);
     onCloseModal();
   };
 </script>
 
 <template>
   <BaseModal :is-show="isShow" @close="onCloseModal">
-    <h1>Редактирование компетенций</h1>
+    <h1>{{ title }}</h1>
     <div class="content">
-      <BaseTextarea
-        placeholder="Например, Теория вероятностей"
-        v-model="input"
-        height="360px"
-      />
-      <BaseButton class="button" @click="saveCompetencies()">
-        Сохранить
-      </BaseButton>
+      <BaseTextarea :placeholder="placeholder" v-model="input" :height="20" />
+      <BaseButton class="button" @click="onSubmit"> {{ submitText }} </BaseButton>
     </div>
   </BaseModal>
 </template>

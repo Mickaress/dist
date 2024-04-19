@@ -1,10 +1,4 @@
-import { SkillType } from './Filters';
-
-export type UserRole =
-  | 'student_candidate'
-  | 'employee_candidate'
-  | 'supervisor'
-  | 'admin';
+export type UserRole = 'student_candidate' | 'employee_candidate' | 'supervisor' | 'admin';
 
 type SharedUserType = {
   id: number;
@@ -12,24 +6,16 @@ type SharedUserType = {
 };
 
 // candidate
-export type SharedCandidateType = {
+export type CandidateType = SharedUserType & {
   email: string;
   phone: string;
   institute: string;
-  skills: SkillType[];
+  skills: number[];
   competencies: string;
+  group?: string;
+  birthday?: string;
+  post?: string;
 };
-
-export type StudentCandidateType = SharedUserType &
-  SharedCandidateType & {
-    group: string;
-    birthday: string;
-  };
-
-export type EmployeeCandidateType = SharedUserType &
-  SharedCandidateType & {
-    post: string;
-  };
 
 // supervisor
 export type SupervisorType = SharedUserType & {

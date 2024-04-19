@@ -1,4 +1,4 @@
-import type { LocationAsRelativeRaw, RouteLocationRaw } from 'vue-router';
+import type { RouteLocationRaw } from 'vue-router';
 import { RouteNames } from '../types/routeNames';
 
 export const vacancyRoute = (vacancyId: number): RouteLocationRaw => {
@@ -9,17 +9,23 @@ export const projectRoute = (projectId: number): RouteLocationRaw => {
   return { name: RouteNames.PROJECT_DETAILS, params: { id: projectId } };
 };
 
-export function toProjectVacancies(projectId: number): LocationAsRelativeRaw {
-  const page = 1;
+export const toProjectVacancies = (projectId: number): RouteLocationRaw => {
   return {
     name: RouteNames.SUPERVISOR_PROJECT_VACANCIES,
-    params: { projectId, page },
+    params: { projectId },
   };
-}
+};
+
+export const toVacancyResponses = (vacancyId: number): RouteLocationRaw => {
+  return {
+    name: RouteNames.SUPERVISOR_VACANCY_RESPONSES,
+    query: { vacancyId: vacancyId, page: 1 },
+  };
+};
 
 export const createVacancyRoute = (projectId: number): RouteLocationRaw => {
   return {
-    name: RouteNames.SUPERVISOR_VACANCY_PROPOSAL_CREATE,
+    name: RouteNames.SUPERVISOR_VACANCY_CREATE,
     params: { id: projectId },
   };
 };

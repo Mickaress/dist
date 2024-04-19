@@ -1,18 +1,13 @@
 <template>
-  <BasePanel
-    v-if="props.isOpen"
-    ref="root"
-    :style="{ ...position }"
-    class="dropdown"
-  >
+  <BasePanel v-if="props.isOpen" ref="root" :style="{ ...position }" class="dropdown">
     <slot></slot>
   </BasePanel>
 </template>
 
 <script setup lang="ts">
+  import { isPartOfNode } from '@/helpers/dom';
   import { onClickOutside } from '@vueuse/core';
   import { ref, watch } from 'vue';
-  import { isPartOfNode } from '@/helpers/dom';
   import BasePanel from './BasePanel.vue';
 
   export type Position = {

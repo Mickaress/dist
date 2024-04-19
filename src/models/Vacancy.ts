@@ -1,5 +1,5 @@
-import type { SkillType } from './Filters';
 import { ProjectType } from './Project';
+import { StateType } from './State';
 
 export type VacancyType = {
   id: number;
@@ -9,8 +9,10 @@ export type VacancyType = {
   conditions: string;
   requirements: string;
   period: string;
-  skills: SkillType[];
+  skills: number[];
   project: Omit<ProjectType, 'conditions' | 'vacancies'>;
+  state: StateType;
+  comment: String;
 };
 
 export type VacancyListType = {

@@ -12,4 +12,5 @@ export type CandidateResponseType = {
   };
   date: string;
   state: StateType;
+  comment: String;
 };

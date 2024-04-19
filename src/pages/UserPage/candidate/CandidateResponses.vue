@@ -8,11 +8,7 @@
   import { projectRoute, vacancyRoute } from '@/router/utils/route';
   import { RouterLink } from 'vue-router';
 
-  const {
-    data: responses,
-    isFetching,
-    isError,
-  } = useGetCandidateResponsesQuery();
+  const { data: responses, isFetching, isError } = useGetCandidateResponsesQuery();
 </script>
 
 <template>
@@ -20,9 +16,7 @@
   <BaseStub v-if="isError" title="Ошибка сервера"></BaseStub>
   <BaseStub v-if="responses?.length === 0" title="Нет откликов"></BaseStub>
   <BasePanel v-else-if="responses" class="panel">
-    <BaseTable
-      :headers="['Вакансия', 'НИОКР', 'Дата подачи отклика', 'Статус']"
-    >
+    <BaseTable :headers="['Вакансия', 'НИОКР', 'Дата подачи отклика', 'Статус']">
       <tr v-for="row in responses" :key="row.id">
         <td class="data">
           <RouterLink :to="vacancyRoute(row.vacancy.id)">
@@ -53,6 +47,7 @@
     font-size: 18px;
     a {
       font-weight: bold;
+      text-decoration: none;
       font-size: 18px;
       &:hover {
         text-decoration: underline;

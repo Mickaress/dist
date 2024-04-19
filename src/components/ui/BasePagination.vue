@@ -2,10 +2,7 @@
   <nav class="pagination">
     <ul class="pagination-list">
       <li :class="['pagination-item', { 'disabled-item': currentPage === 1 }]">
-        <button
-          :class="['pagination-btn', 'pagination-arrow']"
-          @click="setPage(currentPage - 1)"
-        >
+        <button :class="['pagination-btn', 'pagination-arrow']" @click="setPage(currentPage - 1)">
           &lt;
         </button>
       </li>
@@ -22,12 +19,7 @@
           {{ pageLink }}
         </button>
       </li>
-      <li
-        :class="[
-          'pagination-item',
-          { 'disabled-item': currentPage === totalPages },
-        ]"
-      >
+      <li :class="['pagination-item', { 'disabled-item': currentPage === totalPages }]">
         <button
           :disabled="currentPage === totalPages"
           :class="['pagination-btn', 'pagination-arrow']"
@@ -48,15 +40,16 @@
     totalItems: number;
     currentPage: number;
     setPage: (page: number) => void;
+    pageSize?: number;
   };
 
-  const pageSize = PER_PAGE;
+  const props = withDefaults(defineProps<Props>(), {
+    pageSize: PER_PAGE,
+  });
 
   const pagesVisible = PAGES_VISIBLE;
 
-  const props = defineProps<Props>();
-
-  const totalPages = computed(() => Math.ceil(props.totalItems / pageSize));
+  const totalPages = computed(() => Math.ceil(props.totalItems / props.pageSize));
   const startPage = ref(1);
   const endPage = ref(1);
 
@@ -95,7 +88,7 @@
 
     if (endPage.value > totalPages.value) {
       endPage.value = totalPages.value;
-      if (endPage.value > pageSize) {
+      if (endPage.value > props.pageSize) {
         startPage.value = endPage.value - pagesVisible + 1;
       }
     }

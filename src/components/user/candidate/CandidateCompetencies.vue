@@ -1,27 +1,32 @@
 <script setup lang="ts">
+  import { useUpdateCompetenciesMutation } from '@/api/CandidateApi/hooks/useUpdateCompetenciesMutation';
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import BaseButton from '@/components/ui/BaseButton.vue';
-  import { SharedCandidateType } from '@/models/User';
+  import InputModal from '@/components/ui/modal/InputModal.vue';
+  import { CandidateType } from '@/models/User';
   import { computed, ref } from 'vue';
-  import CompetenciesEditModal from './CompetenciesEditModal.vue';
 
   const { data: userData } = useGetUserInfoQuery();
 
-  const candidateData = computed(() => userData.value as SharedCandidateType);
+  const candidateData = computed(() => userData.value as CandidateType);
 
   const isShowModal = ref<boolean>(false);
+
+  const { mutate: updateCompetencies } = useUpdateCompetenciesMutation();
 </script>
 
 <template>
   <section class="section">
     <div class="title">
       <h1>Компетенции</h1>
-      <BaseButton variant="text" @click="isShowModal = true">
-        Изменить
-      </BaseButton>
-      <CompetenciesEditModal
-        :competencies="candidateData.competencies"
+      <BaseButton variant="text" @click="isShowModal = true"> Изменить </BaseButton>
+      <InputModal
         v-model:isShow="isShowModal"
+        title="Редактирование компетенций"
+        :baseText="candidateData.competencies"
+        placeholder="Например, Умение работать в команде"
+        :submitFunction="(text) => updateCompetencies(text)"
+        submit-text="Сохранить"
       />
     </div>
     <p>{{ candidateData.competencies }}</p>

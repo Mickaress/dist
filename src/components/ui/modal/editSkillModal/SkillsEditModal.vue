@@ -1,20 +1,19 @@
 <script setup lang="ts">
   // TODO: сделать более общим и перенести в modal
-  import { useUpdateSkillsMutation } from '@/api/CandidateApi/hooks/useUpdateSkillsMutation';
   import { useGetAllSkillsQuery } from '@/api/SkillApi/hooks/useGetAllSkillsQuery';
   import BaseButton from '@/components/ui/BaseButton.vue';
-  import TagList from '@/components/ui/TagList.vue';
+  import SkillList from '@/components/ui/SkillList.vue';
   import BaseModal from '@/components/ui/modal/BaseModal.vue';
   import { computed, ref, watch } from 'vue';
   import AddSkill from './AddSkill.vue';
   import OfferSkill from './OfferSkill.vue';
 
-  const { mutate: updateSkills } = useUpdateSkillsMutation();
-
   type Props = {
     isShow: boolean;
     skillIds: number[];
+    saveFunction: (skillIds: number[]) => void;
   };
+
   const props = defineProps<Props>();
 
   type Emits = {
@@ -26,41 +25,31 @@
     emit('update:isShow', false);
   }
 
-  const userSkillIds = ref(props.skillIds);
+  const selectedSkillIds = ref(props.skillIds);
 
   watch(
     () => props.isShow,
     () => {
-      userSkillIds.value = props.skillIds;
+      selectedSkillIds.value = props.skillIds;
     },
   );
 
   const { data: allSkills } = useGetAllSkillsQuery();
 
-  const userSkills = computed(
-    () =>
-      allSkills?.value?.filter((skill) =>
-        userSkillIds.value.includes(skill.id),
-      ),
-  );
-
   const notUserSkills = computed(
-    () =>
-      allSkills?.value?.filter(
-        (skill) => !userSkillIds.value.includes(skill.id),
-      ),
+    () => allSkills?.value?.filter((skill) => !selectedSkillIds.value.includes(skill.id)),
   );
 
   function deleteSkill(id: number) {
-    userSkillIds.value = userSkillIds.value.filter((item) => item !== id);
+    selectedSkillIds.value = selectedSkillIds.value.filter((item) => item !== id);
   }
 
   function addSkill(id: number) {
-    userSkillIds.value = [...userSkillIds.value, id];
+    selectedSkillIds.value = [...selectedSkillIds.value, id];
   }
 
   const saveSkills = () => {
-    updateSkills(userSkillIds.value);
+    props.saveFunction(selectedSkillIds.value);
     onCloseModal();
   };
 </script>
@@ -70,9 +59,9 @@
     <h1>Редактирование навыков</h1>
     <div class="skills">
       <h2>Выбранные навыки</h2>
-      <TagList
-        v-if="userSkills?.length"
-        :tag-list="userSkills"
+      <SkillList
+        v-if="selectedSkillIds?.length"
+        :skill-ids="selectedSkillIds"
         :is-visible="true"
         deletable
         :deleteFunc="deleteSkill"

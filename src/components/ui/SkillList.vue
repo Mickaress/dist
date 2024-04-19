@@ -1,12 +1,12 @@
 <script setup lang="ts">
+  import { useGetAllSkillsQuery } from '@/api/SkillApi/hooks/useGetAllSkillsQuery';
   import { declOfNum } from '@/helpers/string';
-  import { SkillType } from '@/models/Filters';
   import { computed, ref, withDefaults } from 'vue';
   import BaseButton from './BaseButton.vue';
   import BaseTag from './BaseTag.vue';
 
   type Props = {
-    tagList: SkillType[];
+    skillIds: number[];
     defaultVisible?: number;
     declWords?: [string, string, string];
     isVisible?: boolean;
@@ -15,15 +15,19 @@
   };
 
   const props = withDefaults(defineProps<Props>(), {
-    tagList: () => [],
     defaultVisible: 3,
     declWords: () => ['навык', 'навыка', 'навыков'],
     isVisible: false,
   });
 
+  const { data: allSkills } = useGetAllSkillsQuery();
+  const skills = computed(
+    () => allSkills.value?.filter((skill) => props.skillIds.includes(skill.id)) || [],
+  );
+
   const isTagsVisible = ref(props.isVisible);
 
-  const hiddenTagsCount = props.tagList.length - props.defaultVisible;
+  const hiddenTagsCount = props.skillIds.length - props.defaultVisible;
   const BtnText = computed(() =>
     isTagsVisible.value
       ? props.isVisible
@@ -32,21 +36,16 @@
       : `+${hiddenTagsCount} ${declOfNum(hiddenTagsCount, props.declWords)}`,
   );
 
-  const visibleTags = computed(() =>
-    isTagsVisible.value
-      ? props.tagList
-      : props.tagList.slice(0, props.defaultVisible),
+  const visibleSkills = computed(() =>
+    isTagsVisible.value ? skills.value : skills.value.slice(0, props.defaultVisible),
   );
 </script>
 
 <template>
-  <ul v-if="visibleTags.length > 0" class="list">
-    <li v-for="tag of visibleTags" :key="tag.id">
-      <BaseTag
-        :deletable="props.deletable"
-        @click="props.deleteFunc && props.deleteFunc(tag.id)"
-      >
-        {{ tag.name }}
+  <ul class="skill-list">
+    <li v-for="skill of visibleSkills" :key="skill.id">
+      <BaseTag :deletable="props.deletable" @click="props.deleteFunc && props.deleteFunc(skill.id)">
+        {{ skill.name }}
       </BaseTag>
     </li>
     <li v-if="hiddenTagsCount > 0" class="button">
@@ -58,9 +57,8 @@
 </template>
 
 <style scoped lang="scss">
-  .list {
+  .skill-list {
     display: flex;
-    width: 100%;
     flex-wrap: wrap;
     gap: 0.5rem;
     align-items: center;

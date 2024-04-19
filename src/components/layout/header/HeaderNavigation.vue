@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { RouterLink } from 'vue-router';
   import { useMainNavigationRoutes } from '@/hooks/useRoutes';
+  import { RouterLink } from 'vue-router';
 
   const routes = useMainNavigationRoutes();
 </script>
@@ -43,7 +43,7 @@
     border-top: 0.25rem solid transparent;
   }
 
-  .nav-link.router-link-exact-active:not(.contacts-link) {
+  .nav-link.router-link-exact-active {
     border-bottom-color: var(--orange-color);
   }
 

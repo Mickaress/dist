@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <RouterLink class="project-tab" :to="{ name: RouteNames.PROJECT_DETAILS }">
-      О проекте
+      О НИОКР
     </RouterLink>
     <RouterLink
       class="project-tab"
@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-  import { RouterLink } from 'vue-router';
   import { RouteNames } from '@/router/types/routeNames';
+  import { RouterLink } from 'vue-router';
 </script>
 
 <style lang="scss" scoped>

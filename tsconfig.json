@@ -17,7 +17,7 @@
       "@/*": ["src/*"],
       "@styles/*": ["src/styles/*"]
     },
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "vue3-toastify/global"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }

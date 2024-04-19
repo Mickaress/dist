@@ -1,3 +1,3 @@
-import AdminApi from './CandidateApi';
+import AdminApi from './AdminApi';
 
 export const adminApi = new AdminApi();

@@ -3,7 +3,7 @@
   import AppList from '@/components/ui/AppList.vue';
   import BasePanel from '@/components/ui/BasePanel.vue';
   import GridLayout from '@/components/ui/GridLayout.vue';
-  import TagList from '@/components/ui/TagList.vue';
+  import SkillList from '@/components/ui/SkillList.vue';
   import { useRoute } from 'vue-router';
 
   const route = useRoute();
@@ -48,7 +48,7 @@
     />
     <div class="skills">
       <h1>Требуемые навыки</h1>
-      <TagList isVisible :tag-list="projectQuery.data.value.skills" />
+      <SkillList isVisible :tag-list="projectQuery.data.value.skills" />
     </div>
   </BasePanel>
 </template>

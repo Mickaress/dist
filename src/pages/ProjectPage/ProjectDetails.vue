@@ -3,7 +3,7 @@
   import AppList from '@/components/ui/AppList.vue';
   import BasePanel from '@/components/ui/BasePanel.vue';
   import GridLayout from '@/components/ui/GridLayout.vue';
-  import TagList from '@/components/ui/TagList.vue';
+  import SkillList from '@/components/ui/SkillList.vue';
   import { useRoute } from 'vue-router';
 
   const route = useRoute();
@@ -13,7 +13,7 @@
 </script>
 
 <template>
-  <BasePanel v-if="projectQuery.data.value">
+  <BasePanel class="panel" v-if="projectQuery.data.value">
     <GridLayout cols="1fr 1fr">
       <AppList
         :items="[
@@ -48,15 +48,18 @@
     />
     <div class="skills">
       <h1>Требуемые навыки</h1>
-      <TagList isVisible :tag-list="projectQuery.data.value.skills" />
+      <SkillList isVisible :skill-ids="projectQuery.data.value.skills" />
     </div>
   </BasePanel>
 </template>
 
 <style lang="scss" scoped>
+  .panel {
+    margin-bottom: 1rem;
+  }
+
   .info {
     h1 {
-      font-weight: 600;
       font-size: 1.125rem;
       margin-bottom: 0.625rem;
     }
@@ -65,6 +68,7 @@
       font-weight: 700;
     }
   }
+
   .skills {
     display: flex;
     gap: 1rem;

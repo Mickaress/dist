@@ -20,6 +20,7 @@
   import ConfirmModal from '@/components/ui/modal/ConfirmModal.vue';
   import { useRoleUserNavigationRoutes } from '@/hooks/useRoutes';
   import { DropdownItem } from '@/models/components/DropdownItem';
+  import { RouteNames } from '@/router/types/routeNames';
   import { ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
 
@@ -27,6 +28,7 @@
     isOpen: boolean;
     handleNode?: HTMLElement;
   };
+
   type Emits = {
     (e: 'update:isOpen', isOpen: boolean): void;
   };
@@ -43,7 +45,11 @@
     () => emit('update:isOpen', false),
   );
 
-  const items = routes.map<DropdownItem>((route) => ({
+  const filteredItems = routes.filter(
+    (route) => route.name !== RouteNames.SUPERVISOR_PROJECT_VACANCIES,
+  );
+
+  const items = filteredItems.map<DropdownItem>((route) => ({
     content: route.meta.title,
     location: { name: route.name },
     type: 'link',

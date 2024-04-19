@@ -1,33 +1,35 @@
 <script setup lang="ts">
+  import { useUpdateSkillsMutation } from '@/api/CandidateApi/hooks/useUpdateSkillsMutation';
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import BaseButton from '@/components/ui/BaseButton.vue';
-  import TagList from '@/components/ui/TagList.vue';
-  import { SharedCandidateType } from '@/models/User';
+  import SkillList from '@/components/ui/SkillList.vue';
+  import SkillsEditModal from '@/components/ui/modal/editSkillModal/SkillsEditModal.vue';
+  import { CandidateType } from '@/models/User';
   import { computed, ref } from 'vue';
-  import SkillsEditModal from './SkillsEditModal.vue';
+
   const { data: userData } = useGetUserInfoQuery();
 
-  const candidateData = computed(() => userData.value as SharedCandidateType);
-
-  const userSkillIds = computed(() =>
-    candidateData.value.skills.map((skill) => skill.id),
-  );
+  const candidateData = computed(() => userData.value as CandidateType);
 
   const isShowModal = ref<boolean>(false);
+
+  const { mutate: updateSkills } = useUpdateSkillsMutation();
 </script>
 
 <template>
   <section v-if="candidateData.skills" class="section">
     <div class="title">
       <h1>Навыки</h1>
-      <BaseButton variant="text" @click="isShowModal = true">
-        Изменить
-      </BaseButton>
+      <BaseButton variant="text" @click="isShowModal = true"> Изменить </BaseButton>
     </div>
     <p v-if="candidateData.skills.length === 0">Навыки не выбраны</p>
-    <TagList v-else :tag-list="candidateData.skills" />
+    <SkillList v-else is-visible :skill-ids="candidateData.skills" />
   </section>
-  <SkillsEditModal :skillIds="userSkillIds" v-model:isShow="isShowModal" />
+  <SkillsEditModal
+    :skillIds="candidateData.skills"
+    v-model:isShow="isShowModal"
+    :save-function="(skillIds) => updateSkills(skillIds)"
+  />
 </template>
 
 <style lang="scss" scoped>

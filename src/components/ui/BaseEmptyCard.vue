@@ -1,7 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  type Props = {
+    height: number;
+  };
+
+  defineProps<Props>();
+</script>
 
 <template>
-  <div class="card"></div>
+  <div class="card" :style="{ height: height + 'rem' }"></div>
 </template>
 
 <style lang="scss" scoped>
@@ -10,7 +16,6 @@
     overflow: hidden;
     background: var(--medium-gray-color);
     border-radius: 0.625rem;
-    height: 25rem;
 
     &::before {
       position: absolute;

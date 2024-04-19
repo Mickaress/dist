@@ -13,21 +13,13 @@
       <div>
         <AppLogo is-footer />
 
-        <BaseButton
-          variant="text"
-          class="initials"
-          is="a"
-          href="https://www.istu.edu/"
-          target="_blank"
-        >
-          <p>
-            Федеральное Государственное Бюджетное Образовательное Учреждение
-            высшего образования
-          </p>
-          <p class="thin">
+        <a class="initials" href="https://www.istu.edu/">
+          Федеральное Государственное Бюджетное Образовательное Учреждение
+          высшего образования <br />
+          <span>
             "Иркутский Национальный Исследовательский Технический Университет"
-          </p>
-        </BaseButton>
+          </span>
+        </a>
       </div>
 
       <nav>
@@ -142,22 +134,21 @@
   }
   .initials {
     display: block;
-    max-width: 26em;
+    max-width: 30em;
     margin-top: 7em;
     color: var(--light-color);
-    text-transform: none;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    font-weight: normal;
 
-    &:active {
-      color: var(--light-color);
+    &:hover {
+      text-decoration: underline;
     }
-
-    p {
+    span {
+      font-weight: bold;
       color: var(--light-color);
       font-size: 0.875rem;
       line-height: 1.5;
-    }
-    .thin {
-      font-weight: normal;
     }
   }
   .nav-list {

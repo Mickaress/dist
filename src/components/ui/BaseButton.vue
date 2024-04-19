@@ -41,6 +41,7 @@
     --light-main-color: var(--light-accent-color);
 
     text-transform: uppercase;
+    text-decoration: none;
     display: inline-flex;
     gap: 0.75rem;
     align-items: center;

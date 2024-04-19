@@ -1,14 +1,22 @@
 <script setup lang="ts">
-  import BaseEmptyCard from './ui/BaseEmptyCard.vue';
   import { PER_PAGE } from '@/constants';
+  import BaseEmptyCard from './ui/BaseEmptyCard.vue';
 
-  const perPage = PER_PAGE;
+  type Props = {
+    height?: number;
+    perPage?: number;
+  };
+
+  withDefaults(defineProps<Props>(), {
+    height: 25,
+    perPage: PER_PAGE,
+  });
 </script>
 
 <template>
   <ul class="list">
     <li v-for="index of perPage" :key="index">
-      <BaseEmptyCard />
+      <BaseEmptyCard :height="height" />
     </li>
   </ul>
 </template>

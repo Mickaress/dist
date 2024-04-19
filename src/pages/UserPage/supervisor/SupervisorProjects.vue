@@ -4,18 +4,18 @@
   import ProjectList from '@/components/project/ProjectList.vue';
   import BasePagination from '@/components/ui/BasePagination.vue';
   import BaseStub from '@/components/ui/BaseStub.vue';
-  import { useSupervisorProjectFilterStore } from '@/stores/supervisorProjectFilter/useProjectFilterStore';
+  import { computed } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
 
-  const {
-    data: projectsData,
-    isLoading,
-    isError,
-  } = useGetSupervisorProjectsQuery();
+  const router = useRouter();
+  const route = useRoute();
 
-  const supervisorProjectFilterStore = useSupervisorProjectFilterStore();
+  const page = computed<number>(() => Number(route.query.page) || 1);
+
+  const { data: projectsData, isLoading, isError } = useGetSupervisorProjectsQuery();
 
   const setPage = (newPage: number) => {
-    supervisorProjectFilterStore.updateFilters({ page: newPage });
+    router.replace({ ...route, query: { page: newPage } });
     window.scrollTo({
       top: 0,
     });
@@ -24,11 +24,7 @@
 
 <template>
   <CardsLoading v-if="isLoading" />
-  <BaseStub
-    v-if="isError"
-    title="Ошибка сервера"
-    subtitle="В данный момент сервер не отвечает"
-  >
+  <BaseStub v-if="isError" title="Ошибка сервера" subtitle="В данный момент сервер не отвечает">
   </BaseStub>
   <BaseStub
     v-if="projectsData?.projectsCount === 0"
@@ -40,8 +36,8 @@
     <ProjectList :projectList="projectsData.projects" />
     <BasePagination
       :total-items="projectsData.projectsCount || 1"
-      :setPage="setPage"
-      :currentPage="supervisorProjectFilterStore.page"
+      :set-page="setPage"
+      :current-page="page"
     />
   </template>
 </template>

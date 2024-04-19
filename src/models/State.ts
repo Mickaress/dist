@@ -1,22 +1,20 @@
-const enum StateID {
-  ActiveState = 1,
-  ArchivedState = 2,
-  ReviewState = 3,
-  ApprovedState = 4,
-  RejectedState = 5,
+export const enum StateID {
+  Active = 1,
+  Archived = 2,
+  Review = 3,
+  Approved = 4,
+  Rejected = 5,
 }
 
-type State<T = StateID> = {
-  id: T;
+export type StateType = {
+  id: StateID;
   state: string;
 };
 
-export type StateType = State<StateID>;
-
 export const StateClass: Record<StateID, string> = {
-  [StateID.ActiveState]: 'active',
-  [StateID.ArchivedState]: 'archived',
-  [StateID.ReviewState]: 'review',
-  [StateID.ApprovedState]: 'approved',
-  [StateID.RejectedState]: 'rejected',
+  [StateID.Active]: 'active',
+  [StateID.Archived]: 'archived',
+  [StateID.Review]: 'review',
+  [StateID.Approved]: 'approved',
+  [StateID.Rejected]: 'rejected',
 };

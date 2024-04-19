@@ -1,4 +1,3 @@
-import type { SkillType } from './Filters';
 import { StateType } from './State';
 import type { SupervisorType } from './User';
 import type { VacancyType } from './Vacancy';
@@ -14,11 +13,8 @@ export type ProjectType = {
   state: StateType;
   payment: boolean;
   views: number;
-  skills: SkillType[];
-  vacancies: Pick<
-    VacancyType,
-    'id' | 'title' | 'salary' | 'responsibilities'
-  >[];
+  skills: number[];
+  vacancies: Pick<VacancyType, 'id' | 'title' | 'salary' | 'responsibilities'>[];
 };
 
 export type ProjectListType = {
