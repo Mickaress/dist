@@ -6,8 +6,7 @@ export const useCloseVacancyMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ vacancyId, projectId }: { vacancyId: number; projectId: number }) =>
-      supervisorApi.closeVacancy(vacancyId),
+    mutationFn: (vacancyId: number) => supervisorApi.closeVacancy(vacancyId),
     onMutate: () => {
       const toastId = toast.loading('Обработка запроса');
       return { toastId };

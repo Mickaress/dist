@@ -101,9 +101,7 @@
             <ConfirmModal
               v-model:is-show="isShowDeleteModal"
               question="Вы уверены, что хотите удалить вакансию?"
-              :agree-action="
-                () => closeVacancy({ vacancyId: vacancy.id, projectId: vacancy.project.id })
-              "
+              :agree-action="() => closeVacancy(vacancy.id)"
               agree-answer="Удалить"
               disagree-answer="Отмена"
             />
