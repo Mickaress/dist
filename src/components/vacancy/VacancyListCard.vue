@@ -100,9 +100,9 @@
             </BaseButton>
             <ConfirmModal
               v-model:is-show="isShowDeleteModal"
-              question="Вы уверены, что хотите удалить вакансию?"
+              question="Вы уверены, что хотите закрыть вакансию?"
               :agree-action="() => closeVacancy(vacancy.id)"
-              agree-answer="Удалить"
+              agree-answer="Закрыть"
               disagree-answer="Отмена"
             />
             <BaseButton

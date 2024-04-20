@@ -1,12 +1,15 @@
 <script setup lang="ts">
+  import { useCloseProjectMutation } from '@/api/SupervisorApi/hooks/useCloseProjectMutation';
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import BaseBadge from '@/components/ui/BaseBadge.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import type { ProjectType } from '@/models/Project';
   import { StateClass } from '@/models/State';
   import { createVacancyRoute, projectRoute } from '@/router/utils/route';
+  import { ref } from 'vue';
   import BasePanel from '../ui/BasePanel.vue';
   import SkillList from '../ui/SkillList.vue';
+  import ConfirmModal from '../ui/modal/ConfirmModal.vue';
 
   type Props = {
     project: Omit<ProjectType, 'conditions' | 'vacancies'>;
@@ -15,6 +18,9 @@
   defineProps<Props>();
 
   const { data: userData } = useGetUserInfoQuery();
+  const { mutate: closeProject } = useCloseProjectMutation();
+
+  const isShowDeleteModal = ref<boolean>(false);
 </script>
 
 <template>
@@ -50,6 +56,21 @@
     <footer class="footer">
       <SkillList :skill-ids="project.skills" />
       <div class="buttons">
+        <BaseButton
+          v-if="project.supervisor.id === userData?.id && project.state.id === 1"
+          color="red"
+          variant="outlined"
+          @click="isShowDeleteModal = true"
+        >
+          Закрыть НИОКР
+        </BaseButton>
+        <ConfirmModal
+          v-model:is-show="isShowDeleteModal"
+          question="Вы уверены, что хотите закрыть НИОКР?"
+          :agree-action="() => closeProject(project.id)"
+          agree-answer="Закрыть"
+          disagree-answer="Отмена"
+        />
         <BaseButton
           v-if="project.supervisor.id === userData?.id && project.state.id !== 2"
           is="router-link"

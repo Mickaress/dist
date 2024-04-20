@@ -22,8 +22,8 @@
   const { mutate: offerSkill } = useOfferSkillMutation();
 
   const offerNewSkill = () => {
-    input.value = '';
     offerSkill(input.value);
+    input.value = '';
   };
 
   const input = ref('');

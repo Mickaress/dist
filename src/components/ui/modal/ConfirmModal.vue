@@ -9,7 +9,7 @@
     disagreeAnswer: string;
     agreeAction: () => void;
   };
-  defineProps<Props>();
+  const props = defineProps<Props>();
 
   type Emits = {
     (event: 'update:isShow', isShow: boolean): void;
@@ -19,6 +19,11 @@
   function onCloseModal() {
     emit('update:isShow', false);
   }
+
+  const onSubmit = () => {
+    props.agreeAction();
+    onCloseModal();
+  };
 </script>
 
 <template>
@@ -26,7 +31,7 @@
     <div class="content">
       <h1>{{ question }}</h1>
       <div class="buttons">
-        <BaseButton @click="agreeAction" variant="outlined" color="red">
+        <BaseButton @click="onSubmit" variant="outlined" color="red">
           {{ agreeAnswer }}
         </BaseButton>
         <BaseButton @click="onCloseModal">{{ disagreeAnswer }}</BaseButton>
