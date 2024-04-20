@@ -5,21 +5,20 @@
 
   type Props = {
     items?: AppListItemType[];
+    width?: number;
   };
 
   const props = withDefaults(defineProps<Props>(), {
     items: () => [],
+    width: 16,
   });
 </script>
 
 <template>
   <ul class="info-list">
     <slot>
-      <template
-        v-for="{ title, content } in props.items"
-        :key="title + content"
-      >
-        <AppListItem>
+      <template v-for="{ title, content } in props.items" :key="title + content">
+        <AppListItem :width="width">
           <template #title>{{ title }}</template>
           <template #default>
             {{ content || '-' }}

@@ -1,8 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  type Props = {
+    width: number;
+  };
+
+  defineProps<Props>();
+</script>
 
 <template>
   <li class="item">
-    <h1 class="title">
+    <h1 class="title" :style="{ minWidth: width + 'rem' }">
       <slot name="title"></slot>
     </h1>
     <span class="value">
@@ -15,9 +21,6 @@
   .item {
     display: flex;
     gap: 1em;
-    h1 {
-      min-width: 16rem;
-    }
   }
 
   .title {

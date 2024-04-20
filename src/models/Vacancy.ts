@@ -8,6 +8,8 @@ export type VacancyType = {
   responsibilities: string;
   conditions: string;
   requirements: string;
+  dateStart: string;
+  dateEnd: string;
   period: string;
   skills: number[];
   project: Omit<ProjectType, 'conditions' | 'vacancies'>;
@@ -18,4 +20,16 @@ export type VacancyType = {
 export type VacancyListType = {
   vacancies: VacancyType[];
   vacancyCount: number;
+};
+
+export type VacancyFormType = {
+  title: string;
+  salary: string;
+  dateStart: string | undefined;
+  dateEnd: string | undefined;
+  requirements: string;
+  responsibilities: string;
+  conditions: string;
+  skillIds: number[];
+  projectId: number;
 };

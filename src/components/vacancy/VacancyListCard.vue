@@ -1,15 +1,17 @@
 <script setup lang="ts">
   import { useCreateResponseMutation } from '@/api/CandidateApi/hooks/useCreateResponseMutation';
+  import { useCloseVacancyMutation } from '@/api/SupervisorApi/hooks/useCloseVacancyMutation';
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import { StateClass, StateID } from '@/models/State';
   import type { VacancyType } from '@/models/Vacancy';
-  import { toVacancyResponses, vacancyRoute } from '@/router/utils/route';
+  import { createVacancyRoute, toVacancyResponses, vacancyRoute } from '@/router/utils/route';
   import { ref } from 'vue';
   import BaseBadge from '../ui/BaseBadge.vue';
   import BasePanel from '../ui/BasePanel.vue';
   import SkillList from '../ui/SkillList.vue';
   import AuthModal from '../ui/modal/AuthModal.vue';
+  import ConfirmModal from '../ui/modal/ConfirmModal.vue';
   import InformationModal from '../ui/modal/InformationModal.vue';
 
   type Props = {
@@ -24,6 +26,7 @@
 
   const isShowAuthModal = ref<boolean>(false);
   const isShowCommentModal = ref<boolean>(false);
+  const isShowDeleteModal = ref<boolean>(false);
 
   const response = (id: number) => {
     if (!userData.value) {
@@ -33,6 +36,8 @@
 
     createResponse(id);
   };
+
+  const { mutate: closeVacancy } = useCloseVacancyMutation();
 </script>
 
 <template>
@@ -79,6 +84,31 @@
           <template v-if="userData.id === vacancy.project.supervisor.id">
             <BaseButton
               v-if="vacancy.state.id === StateID.Active"
+              @click="isShowDeleteModal = true"
+              variant="outlined"
+              color="red"
+            >
+              Закрыть вакансию
+            </BaseButton>
+            <BaseButton
+              v-if="vacancy.state.id === StateID.Rejected"
+              @click="isShowDeleteModal = true"
+              variant="outlined"
+              color="red"
+            >
+              Удалить
+            </BaseButton>
+            <ConfirmModal
+              v-model:is-show="isShowDeleteModal"
+              question="Вы уверены, что хотите удалить вакансию?"
+              :agree-action="
+                () => closeVacancy({ vacancyId: vacancy.id, projectId: vacancy.project.id })
+              "
+              agree-answer="Удалить"
+              disagree-answer="Отмена"
+            />
+            <BaseButton
+              v-if="vacancy.state.id === StateID.Active"
               variant="outlined"
               is="router-link"
               :to="toVacancyResponses(vacancy.id)"
@@ -86,7 +116,13 @@
               Отклики
             </BaseButton>
             <template v-if="vacancy.state.id === StateID.Rejected">
-              <BaseButton variant="outlined">Редактировать</BaseButton>
+              <BaseButton
+                variant="outlined"
+                is="router-link"
+                :to="createVacancyRoute(vacancy.project.id, vacancy.id)"
+              >
+                Редактировать
+              </BaseButton>
               <BaseButton color="red" @click="isShowCommentModal = true">Причина</BaseButton>
             </template>
           </template>
@@ -105,11 +141,9 @@
     </footer>
   </BasePanel>
   <AuthModal v-model:is-show="isShowAuthModal" />
-  <InformationModal
-    title="Причина отклонения заявки"
-    :text="vacancy.comment"
-    v-model:is-show="isShowCommentModal"
-  />
+  <InformationModal title="Причина отклонения заявки" v-model:is-show="isShowCommentModal">
+    {{ vacancy.comment }}
+  </InformationModal>
 </template>
 
 <style lang="scss" scoped>

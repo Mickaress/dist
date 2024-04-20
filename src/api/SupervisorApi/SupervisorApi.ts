@@ -1,6 +1,6 @@
 import { ProjectListType, ProjectType } from '@/models/Project';
 import { CandidateResponseListType } from '@/models/Proposal';
-import { VacancyListType } from '@/models/Vacancy';
+import { VacancyFormType, VacancyListType } from '@/models/Vacancy';
 import { axiosInstance } from '../axiosInstance';
 import SupervisorApiType from './SupervisorType';
 
@@ -34,8 +34,20 @@ export default class SupervisorApi implements SupervisorApiType {
     return response.data;
   }
 
-  async createVacancy(): Promise<void> {
-    await axiosInstance.post('/supervisor/vacancy/create');
+  async createVacancy(vacancyData: VacancyFormType): Promise<void> {
+    await axiosInstance.post('/supervisor/vacancy/create', vacancyData);
+  }
+
+  async updateVacancy(vacancyData: VacancyFormType, vacancyId?: number): Promise<void> {
+    await axiosInstance.patch(`/supervisor/vacancy/${vacancyId}/change`, vacancyData);
+  }
+
+  async closeVacancy(vacancyId: number): Promise<void> {
+    await axiosInstance.patch(`supervisor/close-vacancy/${vacancyId}`);
+  }
+
+  async closeProject(projectId: number): Promise<void> {
+    await axiosInstance.patch(`supervisor/close-project/${projectId}`);
   }
 
   async getProjectVacancies(projectId: number, page: number): Promise<VacancyListType> {

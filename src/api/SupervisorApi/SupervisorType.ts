@@ -1,10 +1,12 @@
 import type { ProjectListType, ProjectType } from '@/models/Project';
 import { CandidateResponseListType } from '@/models/Proposal';
-import { VacancyListType } from '@/models/Vacancy';
+import { VacancyFormType, VacancyListType } from '@/models/Vacancy';
 
 export default interface SupervisorApiType {
-  createVacancy(): Promise<void>;
+  createVacancy(vacancyData: VacancyFormType): Promise<void>;
   reviewResponse(responseId: number, stateId: number): Promise<void>;
+  closeVacancy(vacancyId: number): Promise<void>;
+  closeProject(projectId: number): Promise<void>;
   getVacancyResponses(
     vacancyId: number,
     stateId: number,

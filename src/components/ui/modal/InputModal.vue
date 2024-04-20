@@ -7,13 +7,15 @@
   type Props = {
     isShow: boolean;
     title: string;
-    baseText: string;
+    baseText?: string;
     placeholder: string;
     submitFunction: (text: string) => void;
     submitText: string;
   };
 
-  const props = defineProps<Props>();
+  const props = withDefaults(defineProps<Props>(), {
+    baseText: '',
+  });
 
   type Emits = {
     (event: 'update:isShow', isShow: boolean): void;

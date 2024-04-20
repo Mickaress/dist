@@ -23,7 +23,15 @@ export const toVacancyResponses = (vacancyId: number): RouteLocationRaw => {
   };
 };
 
-export const createVacancyRoute = (projectId: number): RouteLocationRaw => {
+export const createVacancyRoute = (projectId: number, vacancyId?: number): RouteLocationRaw => {
+  if (vacancyId) {
+    return {
+      name: RouteNames.SUPERVISOR_VACANCY_CREATE,
+      params: { id: projectId },
+      query: { vacancyId: vacancyId },
+    };
+  }
+
   return {
     name: RouteNames.SUPERVISOR_VACANCY_CREATE,
     params: { id: projectId },

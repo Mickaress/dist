@@ -1,18 +1,28 @@
 <script setup lang="ts">
   import { StateClass, StateType } from '@/models/State';
+  import { ref } from 'vue';
   import BaseBadge from './BaseBadge.vue';
   import BaseButton from './BaseButton.vue';
   import BasePanel from './BasePanel.vue';
+  import InformationModal from './modal/InformationModal.vue';
+  import InputModal from './modal/InputModal.vue';
 
   type Props = {
     title: String;
     state: StateType;
     approve?: () => void;
     reject?: () => void;
-    openModal?: () => void;
+    commentReject?: (comment: string) => void;
   };
 
-  defineProps<Props>();
+  const props = defineProps<Props>();
+
+  const isShowInfoModal = ref<boolean>(false);
+  const isShowRejectModal = ref<boolean>(false);
+
+  const onCommentReject = (comment: string) => {
+    if (props.commentReject) props.commentReject(comment);
+  };
 </script>
 
 <template>
@@ -29,10 +39,25 @@
         <BaseButton variant="outlined" v-if="approve && state.id !== 4" @click="approve">
           Одобрить
         </BaseButton>
-        <BaseButton variant="outlined" color="red" v-if="reject && state.id !== 5" @click="reject"
-          >Отклонить</BaseButton
+        <BaseButton
+          variant="outlined"
+          color="red"
+          v-if="(reject || commentReject) && state.id !== 5"
+          @click="commentReject ? (isShowRejectModal = true) : reject"
         >
-        <BaseButton v-if="openModal" @click="openModal">Подробнее</BaseButton>
+          Отклонить
+        </BaseButton>
+        <BaseButton @click="isShowInfoModal = true">Подробнее</BaseButton>
+        <InformationModal :title="title" v-model:is-show="isShowInfoModal">
+          <slot name="info"></slot>
+        </InformationModal>
+        <InputModal
+          v-model:is-show="isShowRejectModal"
+          title="Причина отклонения"
+          placeholder="Например, Ошибка в обязанностях"
+          :submit-function="(comment) => onCommentReject(comment)"
+          submit-text="Отправить"
+        />
       </div>
     </div>
   </BasePanel>

@@ -33,9 +33,10 @@ export default class AdminApi implements AdminApiType {
     return response.data;
   }
 
-  async reviewVacancy(vacancyId: number, stateId: number): Promise<void> {
+  async reviewVacancy(vacancyId: number, stateId: number, comment: string): Promise<void> {
     await axiosInstance.patch(`/admin/vacancy/${vacancyId}`, {
       stateId: stateId,
+      comment: comment,
     });
   }
 }

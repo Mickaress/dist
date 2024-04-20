@@ -1,28 +1,21 @@
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { toast } from 'vue3-toastify';
-import { adminApi } from '..';
+import { supervisorApi } from '..';
 
-export const useReviewVacancyMutation = () => {
+export const useCloseVacancyMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      vacancyId,
-      stateId,
-      comment,
-    }: {
-      vacancyId: number;
-      stateId: number;
-      comment: string;
-    }) => adminApi.reviewVacancy(vacancyId, stateId, comment),
+    mutationFn: ({ vacancyId, projectId }: { vacancyId: number; projectId: number }) =>
+      supervisorApi.closeVacancy(vacancyId),
     onMutate: () => {
       const toastId = toast.loading('Обработка запроса');
       return { toastId };
     },
     onSuccess: async (data, variables, context) => {
-      await queryClient.invalidateQueries(['vacancy_offers']);
+      await queryClient.invalidateQueries(['project_vacancies']);
       toast.remove(context?.toastId);
-      toast.success('Вакансия рассмотрена');
+      toast.success('Вакансия закрыта');
     },
     onError: (error, variables, context) => {
       toast.remove(context?.toastId);

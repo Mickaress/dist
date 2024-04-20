@@ -5,7 +5,6 @@
   type Props = {
     isShow: boolean;
     title: String;
-    text: String;
   };
   defineProps<Props>();
 
@@ -23,7 +22,7 @@
   <BaseModal :is-show="isShow" @close="onCloseModal">
     <div class="content">
       <h1>{{ title }}</h1>
-      <p>{{ text }}</p>
+      <p><slot></slot></p>
       <div class="button">
         <BaseButton @click="onCloseModal">Хорошо</BaseButton>
       </div>
