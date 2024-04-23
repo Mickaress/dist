@@ -1,3 +1,4 @@
+import { FilterProposalsBy } from '@/models/Proposal';
 import type { RouteLocationRaw } from 'vue-router';
 import { RouteNames } from '../types/routeNames';
 
@@ -19,6 +20,7 @@ export const toProjectVacancies = (projectId: number): RouteLocationRaw => {
 export const toVacancyResponses = (vacancyId: number): RouteLocationRaw => {
   return {
     name: RouteNames.SUPERVISOR_VACANCY_RESPONSES,
+    params: { filterBy: FilterProposalsBy.Review },
     query: { vacancyId: vacancyId, page: 1 },
   };
 };

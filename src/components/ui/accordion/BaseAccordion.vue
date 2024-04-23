@@ -1,11 +1,7 @@
 <template>
   <section :class="['accordion', { opened: opened, closed: !opened }]">
     <header class="header">
-      <button
-        type="button"
-        class="title"
-        @click="emits('update:opened', !props.opened)"
-      >
+      <button type="button" class="title" @click="emits('update:opened', !props.opened)">
         <slot name="title"></slot>
         <slot name="icon">
           <span class="icon"></span>
@@ -18,11 +14,7 @@
       @enter="(el: Element) => onEnter(el as HTMLElement)"
       @leave="(el: Element) => onLeave(el as HTMLElement)"
     >
-      <div
-        v-if="props.opened"
-        ref="contentRef"
-        :class="['content', { animated: props.animated }]"
-      >
+      <div v-if="props.opened" ref="contentRef" :class="['content', { animated: props.animated }]">
         <slot name="content"></slot>
       </div>
     </Transition>
@@ -97,7 +89,9 @@
 <style lang="scss" scoped>
   .title,
   .content {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
     padding: 0;
     font-family: inherit;
@@ -115,8 +109,7 @@
     display: inline-block;
     width: 19px;
     height: 11px;
-    background: url('@/assets/icons/dropdown-arrow.svg') center / cover
-      no-repeat;
+    background: url('@/assets/icons/dropdown-arrow.svg') center / cover no-repeat;
     transform: rotate(180deg);
     cursor: pointer;
   }

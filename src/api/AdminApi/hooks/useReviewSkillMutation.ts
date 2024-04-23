@@ -12,8 +12,7 @@ export const useReviewSkillMutation = () => {
       return { toastId };
     },
     onSuccess: async (data, variables, context) => {
-      await queryClient.invalidateQueries(['skill_offers']);
-      await queryClient.invalidateQueries(['skills']);
+      await queryClient.invalidateQueries();
       toast.remove(context?.toastId);
       toast.success('Навык рассмотрен');
     },

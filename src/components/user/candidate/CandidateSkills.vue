@@ -3,7 +3,7 @@
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import SkillList from '@/components/ui/SkillList.vue';
-  import SkillsEditModal from '@/components/ui/modal/editSkillModal/SkillsEditModal.vue';
+  import SkillsEditModal from '@/components/ui/modal/editSkillModal/SkillModal.vue';
   import { CandidateType } from '@/models/User';
   import { computed, ref } from 'vue';
 

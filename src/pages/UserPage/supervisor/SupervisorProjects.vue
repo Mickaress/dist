@@ -1,45 +1,88 @@
 <script setup lang="ts">
+  import { useCloseProjectMutation } from '@/api/SupervisorApi/hooks/useCloseProjectMutation';
   import { useGetSupervisorProjectsQuery } from '@/api/SupervisorApi/hooks/useGetSupervisorProjectsQuery';
-  import CardsLoading from '@/components/CardsLoading.vue';
-  import ProjectList from '@/components/project/ProjectList.vue';
-  import BasePagination from '@/components/ui/BasePagination.vue';
-  import BaseStub from '@/components/ui/BaseStub.vue';
-  import { computed } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
+  import BaseList from '@/components/BaseList.vue';
+  import BaseButton from '@/components/ui/BaseButton.vue';
+  import BaseCard from '@/components/ui/BaseCard.vue';
+  import SkillList from '@/components/ui/SkillList.vue';
+  import ConfirmModal from '@/components/ui/modal/ConfirmModal.vue';
+  import { StateID } from '@/models/State';
+  import { createVacancyRoute, projectRoute } from '@/router/utils/route';
+  import { ref } from 'vue';
 
-  const router = useRouter();
-  const route = useRoute();
+  const projectsQuery = useGetSupervisorProjectsQuery();
+  const { mutate: closeProject } = useCloseProjectMutation();
 
-  const page = computed<number>(() => Number(route.query.page) || 1);
+  const deletableProjectId = ref<number>(0);
+  const isShowDeleteModal = ref<boolean>(false);
 
-  const { data: projectsData, isLoading, isError } = useGetSupervisorProjectsQuery();
-
-  const setPage = (newPage: number) => {
-    router.replace({ ...route, query: { page: newPage } });
-    window.scrollTo({
-      top: 0,
-    });
+  const onCloseProject = (projectId: number) => {
+    deletableProjectId.value = projectId;
+    isShowDeleteModal.value = true;
   };
 </script>
 
 <template>
-  <CardsLoading v-if="isLoading" />
-  <BaseStub v-if="isError" title="Ошибка сервера" subtitle="В данный момент сервер не отвечает">
-  </BaseStub>
-  <BaseStub
-    v-if="projectsData?.projectsCount === 0"
-    title="НИОКР не найдены"
-    subtitle="Пока нет ни одного НИОКР с введённым названием и/или выбранными фильтрами"
+  <!-- Modals -->
+  <ConfirmModal
+    v-model:is-show="isShowDeleteModal"
+    question="Вы уверены, что хотите закрыть этот НИОКР?"
+    :agree-action="() => closeProject(deletableProjectId)"
+    agree-answer="Закрыть"
+    disagree-answer="Отмена"
+  />
+  <!-- Modals -->
+  <BaseList
+    :is-loading="projectsQuery.isLoading.value"
+    :is-mini="false"
+    :is-error="projectsQuery.isError.value"
+    empty-title="У вас нет НИОКР"
+    empty-subtitle="Пока у вас нет ни одного НИОКР"
+    :total-items="projectsQuery.data.value?.quantity || 0"
   >
-  </BaseStub>
-  <template v-else-if="projectsData">
-    <ProjectList :projectList="projectsData.projects" />
-    <BasePagination
-      :total-items="projectsData.projectsCount || 1"
-      :set-page="setPage"
-      :current-page="page"
-    />
-  </template>
+    <template #list>
+      <li v-for="project in projectsQuery.data.value?.projects" :key="project.id">
+        <BaseCard
+          :title="project.title"
+          :link="projectRoute(project.id)"
+          :state="project.state"
+          is-divide
+        >
+          <template #header>
+            <p>{{ project.supervisor.fio }}</p>
+          </template>
+          <template #main>
+            <p>
+              Описание:
+              <span>{{ project.description }}</span>
+            </p>
+            <p>
+              Цель:
+              <span>{{ project.goal }}</span>
+            </p>
+            <p>
+              Период работы:
+              <span> {{ project.period }} </span>
+            </p>
+          </template>
+          <template #footer>
+            <SkillList :skillIds="project.skills" />
+          </template>
+          <template #buttons>
+            <template v-if="project.state.id === StateID.Active">
+              <BaseButton color="red" variant="outlined" @click="onCloseProject(project.id)">
+                Закрыть НИОКР
+              </BaseButton>
+              <BaseButton is="router-link" variant="outlined" :to="createVacancyRoute(project.id)">
+                Добавить вакансию
+              </BaseButton>
+            </template>
+            <BaseButton is="router-link" :to="projectRoute(project.id)"> Подробнее </BaseButton>
+          </template>
+        </BaseCard>
+      </li>
+    </template>
+  </BaseList>
 </template>
 
 <style lang="scss" scoped></style>

@@ -6,6 +6,6 @@ export const useGetSingleVacancyQuery = (vacancyId: number) => {
     queryKey: ['vacancy', vacancyId],
     queryFn: () => vacancyApi.getSingleVacancy(vacancyId),
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 };

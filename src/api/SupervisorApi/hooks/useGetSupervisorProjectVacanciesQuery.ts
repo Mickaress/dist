@@ -23,9 +23,8 @@ export const useGetSupervisorProjectVacanciesQuery = () => {
 
   return useQuery({
     queryKey: ['project_vacancies', projectId, page],
-    queryFn: () =>
-      supervisorApi.getProjectVacancies(projectId.value, page.value),
+    queryFn: () => supervisorApi.getProjectVacancies(projectId.value, page.value),
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 };

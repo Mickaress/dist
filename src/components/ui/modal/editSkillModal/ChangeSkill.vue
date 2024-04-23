@@ -18,8 +18,7 @@
     searchText.value
       ? props.skills?.filter(
           (skill) =>
-            searchText.value &&
-            skill.name.toLowerCase().includes(searchText.value.toLowerCase()),
+            searchText.value && skill.name.toLowerCase().includes(searchText.value.toLowerCase()),
         )
       : props.skills,
   );
@@ -41,7 +40,7 @@
         />
       </template>
       <template #default>
-        <ul class="list">
+        <ul class="lists">
           <li v-for="skill of filteredSkills" :key="skill.id">
             <button @click="addSkillFunc(skill.id)">
               {{ skill.name }}
@@ -68,7 +67,7 @@
     display: flex;
     flex-direction: column;
   }
-  .list {
+  .lists {
     li {
       button {
         color: var(--dark-color);

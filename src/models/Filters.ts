@@ -1,6 +1,8 @@
+export type PaymentType = 'true' | 'false';
+
 export type FilterType = {
   title: string;
-  payment: Boolean[];
+  payment: PaymentType[];
   skills: number[];
   page: number;
 };

@@ -1,57 +1,56 @@
 <script setup lang="ts">
   import { useGetCandidateResponsesQuery } from '@/api/CandidateApi/hooks/useGetCandidateResponsesQuery';
-  import BaseBadge from '@/components/ui/BaseBadge.vue';
-  import BasePanel from '@/components/ui/BasePanel.vue';
-  import BaseStub from '@/components/ui/BaseStub.vue';
-  import BaseTable from '@/components/ui/BaseTable.vue';
-  import { StateClass } from '@/models/State';
-  import { projectRoute, vacancyRoute } from '@/router/utils/route';
-  import { RouterLink } from 'vue-router';
+  import BaseList from '@/components/BaseList.vue';
+  import BaseButton from '@/components/ui/BaseButton.vue';
+  import BaseCard from '@/components/ui/BaseCard.vue';
+  import InformationModal from '@/components/ui/modal/InformationModal.vue';
+  import { StateID } from '@/models/State';
+  import { vacancyRoute } from '@/router/utils/route';
+  import { ref } from 'vue';
 
-  const { data: responses, isFetching, isError } = useGetCandidateResponsesQuery();
+  const candidateResponsesQuery = useGetCandidateResponsesQuery();
+
+  const isShowModal = ref(false);
+  const modalText = ref('');
+
+  const onShow = (comment: string) => {
+    modalText.value = comment;
+    isShowModal.value = true;
+  };
 </script>
 
 <template>
-  <BaseStub v-if="isFetching" title="Загрузка..."></BaseStub>
-  <BaseStub v-if="isError" title="Ошибка сервера"></BaseStub>
-  <BaseStub v-if="responses?.length === 0" title="Нет откликов"></BaseStub>
-  <BasePanel v-else-if="responses" class="panel">
-    <BaseTable :headers="['Вакансия', 'НИОКР', 'Дата подачи отклика', 'Статус']">
-      <tr v-for="row in responses" :key="row.id">
-        <td class="data">
-          <RouterLink :to="vacancyRoute(row.vacancy.id)">
-            {{ row.vacancy.title }}
-          </RouterLink>
-        </td>
-        <td class="data">
-          <RouterLink :to="projectRoute(row.vacancy.project.id)">
-            {{ row.vacancy.project.title }}
-          </RouterLink>
-        </td>
-        <td class="data">{{ row.date }}</td>
-        <td class="data">
-          <BaseBadge :class="StateClass[row.state.id]">
-            {{ row.state.state }}
-          </BaseBadge>
-        </td>
-      </tr>
-    </BaseTable>
-  </BasePanel>
+  <BaseList
+    :is-loading="candidateResponsesQuery.isLoading.value"
+    :is-error="candidateResponsesQuery.isError.value"
+    empty-title="Нет откликов"
+    empty-subtitle="Пока нет ни одного отклика"
+    :total-items="candidateResponsesQuery.data.value?.quantity || 0"
+  >
+    <template #list>
+      <li v-for="response in candidateResponsesQuery.data.value?.responses" :key="response.id">
+        <BaseCard
+          :title="response.vacancy.title"
+          :link="vacancyRoute(response.vacancy.id)"
+          :state="response.state"
+        >
+          <template #footer>
+            <p>Дата отклика: {{ response.date }}</p>
+          </template>
+          <template #buttons>
+            <BaseButton
+              v-if="response.state.id === StateID.Rejected"
+              @click="onShow(response.comment)"
+              color="red"
+            >
+              Причина
+            </BaseButton>
+          </template>
+        </BaseCard>
+      </li>
+    </template>
+  </BaseList>
+  <InformationModal v-model:is-show="isShowModal" title="Причина">
+    {{ modalText }}
+  </InformationModal>
 </template>
-
-<style lang="scss" scoped>
-  .data {
-    padding: 1.25rem 1rem;
-    border-top: 1px solid var(--medium-gray-color);
-    font-weight: bold;
-    font-size: 18px;
-    a {
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 18px;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-</style>

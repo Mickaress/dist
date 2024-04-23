@@ -5,7 +5,7 @@
   import SkillList from '@/components/ui/SkillList.vue';
   import BaseModal from '@/components/ui/modal/BaseModal.vue';
   import { computed, ref, watch } from 'vue';
-  import AddSkill from './AddSkill.vue';
+  import ChangeSkill from './ChangeSkill.vue';
   import OfferSkill from './OfferSkill.vue';
 
   type Props = {
@@ -55,9 +55,9 @@
 </script>
 
 <template>
-  <BaseModal :is-show="isShow" @close="onCloseModal">
+  <BaseModal class="skill-modal" :is-show="isShow" @close="onCloseModal">
     <h1>Редактирование навыков</h1>
-    <div class="skills">
+    <div class="skill-modal__selected-skills">
       <h2>Выбранные навыки</h2>
       <SkillList
         v-if="selectedSkillIds?.length"
@@ -68,41 +68,45 @@
       />
       <p v-else>Навыки не выбраны</p>
     </div>
-    <div class="cols">
-      <AddSkill :skills="notUserSkills" :addSkillFunc="addSkill" />
+    <div class="skill-modal__wrapper">
+      <ChangeSkill :skills="notUserSkills" :addSkillFunc="addSkill" />
       <OfferSkill />
     </div>
-    <div class="btn">
+    <div class="skill-modal__button">
       <BaseButton @click="saveSkills()">Сохранить</BaseButton>
     </div>
   </BaseModal>
 </template>
 
 <style scoped lang="scss">
-  h1 {
-    font-size: 1.875rem;
-    margin-bottom: 20px;
-  }
-  .skills {
-    h2 {
-      margin-bottom: 8px;
+  .skill-modal {
+    h1 {
+      font-size: 1.875rem;
     }
-    p {
-      font-size: 10px;
-      text-transform: uppercase;
-      color: var(--dark-gray-color);
+
+    &__selected-skills {
+      border-bottom: 1px solid var(--medium-gray-color);
+      padding-bottom: 1.25rem;
+      margin: 1.25rem 0;
+      h2 {
+        margin-bottom: 0.5rem;
+      }
+      p {
+        font-size: 0.625rem;
+        text-transform: uppercase;
+        color: var(--dark-gray-color);
+      }
     }
-  }
-  .cols {
-    display: flex;
-    gap: 5px;
-    padding-top: 20px;
-    margin-top: 30px;
-    border-top: 1px solid var(--medium-gray-color);
-  }
-  .btn {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
+
+    &__wrapper {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    &__button {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.25rem;
+    }
   }
 </style>

@@ -4,17 +4,25 @@ import { supervisorApi } from '..';
 
 export const useReviewResponseMutation = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: ({ responseId, stateId }: { responseId: number; stateId: number }) =>
-      supervisorApi.reviewResponse(responseId, stateId),
+    mutationFn: ({
+      responseId,
+      stateId,
+      comment,
+    }: {
+      responseId: number;
+      stateId: number;
+      comment: string;
+    }) => supervisorApi.reviewResponse(responseId, stateId, comment),
     onMutate: () => {
       const toastId = toast.loading('Обработка запроса');
       return { toastId };
     },
     onSuccess: async (data, variables, context) => {
-      await queryClient.invalidateQueries(['vacancy_responses']);
+      await queryClient.invalidateQueries();
       toast.remove(context?.toastId);
-      toast.success('Вакансия рассмотрена');
+      toast.success('Отклик рассмотрен');
     },
     onError: (error, variables, context) => {
       toast.remove(context?.toastId);

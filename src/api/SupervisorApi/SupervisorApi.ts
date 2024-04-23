@@ -1,5 +1,5 @@
 import { ProjectListType, ProjectType } from '@/models/Project';
-import { CandidateResponseListType } from '@/models/Proposal';
+import { ResponseListType } from '@/models/Proposal';
 import { VacancyFormType, VacancyListType } from '@/models/Vacancy';
 import { axiosInstance } from '../axiosInstance';
 import SupervisorApiType from './SupervisorType';
@@ -9,7 +9,7 @@ export default class SupervisorApi implements SupervisorApiType {
     vacancyId: number,
     stateId: number,
     page: number,
-  ): Promise<CandidateResponseListType> {
+  ): Promise<ResponseListType> {
     const response = await axiosInstance.get(`/supervisor/vacancy/${vacancyId}/responses`, {
       params: {
         stateId: stateId,
@@ -19,9 +19,10 @@ export default class SupervisorApi implements SupervisorApiType {
     return response.data;
   }
 
-  async reviewResponse(responseId: number, stateId: number) {
+  async reviewResponse(responseId: number, stateId: number, comment: string) {
     await axiosInstance.patch(`/supervisor/response/${responseId}`, {
       stateId: stateId,
+      comment: comment,
     });
   }
 

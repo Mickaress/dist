@@ -1,28 +1,26 @@
 <script setup lang="ts">
-  import { PER_PAGE } from '@/constants';
+  import { MINI_PER_PAGE, PER_PAGE } from '@/constants';
   import BaseEmptyCard from './ui/BaseEmptyCard.vue';
 
   type Props = {
-    height?: number;
-    perPage?: number;
+    isMini: boolean;
   };
 
-  withDefaults(defineProps<Props>(), {
-    height: 25,
-    perPage: PER_PAGE,
-  });
+  const props = defineProps<Props>();
+
+  const perPage = props.isMini ? MINI_PER_PAGE : PER_PAGE;
 </script>
 
 <template>
-  <ul class="list">
+  <ul class="loading__list">
     <li v-for="index of perPage" :key="index">
-      <BaseEmptyCard :height="height" />
+      <BaseEmptyCard :is-mini="isMini" />
     </li>
   </ul>
 </template>
 
 <style lang="scss" scoped>
-  .list {
+  .loading__list {
     display: flex;
     flex-direction: column;
     gap: 0.9375rem;

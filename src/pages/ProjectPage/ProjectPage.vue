@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import { useGetSingleProjectQuery } from '@/api/ProjectApi/hooks/useGetSingleProjectQuery';
-  import ProjectTabs from '@/components/project/ProjectTabs.vue';
+  import ProjectTabs from '@/components/ProjectTabs.vue';
   import BaseBreadcrumbs from '@/components/ui/BaseBreadcrumbs.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
+  import BaseStub from '@/components/ui/BaseStub.vue';
   import { RouteNames } from '@/router/types/routeNames';
-  import { useRoute } from 'vue-router';
-  import { RouterView } from 'vue-router';
+  import { RouterView, useRoute } from 'vue-router';
 
   const route = useRoute();
 
@@ -14,25 +14,30 @@
 </script>
 
 <template>
-  <header class="header">
-    <BaseBreadcrumbs
-      :breadcrumbs="[
-        { title: 'Все НИОКР', to: { name: RouteNames.PROJECTS } },
-        { title: projectQuery.data.value?.title || '' },
-      ]"
-    />
-    <h1>{{ projectQuery.data.value?.title }}</h1>
-  </header>
-  <ProjectTabs v-if="projectQuery.data.value" />
-  <RouterView />
-  <footer class="footer">
-    <BaseButton
-      variant="text"
-      @click="$router.push({ name: RouteNames.PROJECTS })"
-    >
-      Назад к списку
-    </BaseButton>
-  </footer>
+  <BaseStub v-if="projectQuery.isLoading.value" title="Загрузка..."></BaseStub>
+  <BaseStub
+    v-if="projectQuery.isError.value"
+    title="Ошибка сервера"
+    subtitle="В данный момент сервер не отвечает"
+  ></BaseStub>
+  <template v-if="projectQuery.data.value">
+    <header class="header">
+      <BaseBreadcrumbs
+        :breadcrumbs="[
+          { title: 'Все НИОКР', to: { name: RouteNames.PROJECTS } },
+          { title: projectQuery.data.value?.title || '' },
+        ]"
+      />
+      <h1>{{ projectQuery.data.value?.title }}</h1>
+    </header>
+    <ProjectTabs v-if="projectQuery.data.value" />
+    <RouterView />
+    <footer class="footer">
+      <BaseButton variant="text" @click="$router.push({ name: RouteNames.PROJECTS })">
+        Назад к списку
+      </BaseButton>
+    </footer>
+  </template>
 </template>
 
 <style lang="scss" scoped>

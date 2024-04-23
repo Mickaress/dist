@@ -1,13 +1,13 @@
 import { VacancyFormType } from '@/models/Vacancy';
 import { RouteNames } from '@/router/types/routeNames';
-import { useMutation, useQueryClient } from '@tanstack/vue-query';
+import { useMutation } from '@tanstack/vue-query';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { supervisorApi } from '..';
+// TODO: Переименовать
 
 export const useUpdateVacancyMutation = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ vacancyData, vacancyId }: { vacancyData: VacancyFormType; vacancyId: number }) =>
@@ -17,11 +17,6 @@ export const useUpdateVacancyMutation = () => {
       return { toastId };
     },
     onSuccess: async (data, variables, context) => {
-      await queryClient.invalidateQueries([
-        'project_vacancies',
-        variables.vacancyData.projectId,
-        1,
-      ]);
       toast.remove(context?.toastId);
       router.replace({
         name: RouteNames.SUPERVISOR_PROJECT_VACANCIES,
@@ -29,7 +24,6 @@ export const useUpdateVacancyMutation = () => {
           projectId: variables.vacancyData.projectId,
         },
       });
-      window.scrollTo({ left: 0, top: 0 });
       toast.success('Вакансия отправлена на рассмотрение');
     },
     onError: (error, variables, context) => {

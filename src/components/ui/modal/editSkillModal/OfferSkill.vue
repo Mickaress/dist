@@ -6,7 +6,7 @@
       <form>
         <BaseTextarea placeholder="Например, Теория вероятностей" v-model="input" />
         <BaseButton variant="outlined" type="button" @click="offerNewSkill">
-          Добавить навык
+          Предложить навык
         </BaseButton>
       </form>
     </section>

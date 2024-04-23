@@ -6,6 +6,6 @@ export const useGetSupervisorActiveProjectsQuery = () => {
     queryKey: ['active_projects'],
     queryFn: () => supervisorApi.getActiveProjects(),
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 };

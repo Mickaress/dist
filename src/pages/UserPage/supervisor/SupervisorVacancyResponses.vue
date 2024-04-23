@@ -2,46 +2,47 @@
   import { useGetVacancyResponsesQuery } from '@/api/SupervisorApi/hooks/useGetVacancyResponsesQuery';
   import { useReviewResponseMutation } from '@/api/SupervisorApi/hooks/useReviewResponseMutation';
   import { useGetSingleVacancyQuery } from '@/api/VacancyApi/hooks/useGetSingleVacancyQuery';
-  import CardsLoading from '@/components/CardsLoading.vue';
+  import BaseList from '@/components/BaseList.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
-  import BasePagination from '@/components/ui/BasePagination.vue';
   import BaseStub from '@/components/ui/BaseStub.vue';
   import ProposalCard from '@/components/ui/ProposalCard.vue';
   import SkillList from '@/components/ui/SkillList.vue';
   import { FilterProposalsBy } from '@/models/Proposal';
-  import { RouteNames } from '@/router/types/routeNames';
-  import { computed, watch } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
+  import { computed } from 'vue';
+  import { useRoute } from 'vue-router';
 
-  const router = useRouter();
   const route = useRoute();
 
-  const page = computed(() => Number(route.query.page));
-
-  watch(
-    () => route.params.filterBy,
-    (filterBy) => {
-      if (!filterBy && route.name === RouteNames.SUPERVISOR_VACANCY_RESPONSES) {
-        router.replace({
-          ...route,
-          params: { filterBy: FilterProposalsBy.Review },
-        });
-      }
-    },
-    { immediate: true },
-  );
+  // watch(
+  //   () => route.params.filterBy,
+  //   (filterBy) => {
+  //     if (!filterBy && route.name === RouteNames.SUPERVISOR_VACANCY_RESPONSES) {
+  //       router.replace({
+  //         ...route,
+  //         params: { filterBy: FilterProposalsBy.Review },
+  //       });
+  //     }
+  //   },
+  //   { immediate: true },
+  // );
 
   const responsesQuery = useGetVacancyResponsesQuery();
   const vacancyQuery = useGetSingleVacancyQuery(Number(route.query.vacancyId));
 
   const { mutate: reviewResponse } = useReviewResponseMutation();
 
-  const changePage = (page: number) => {
-    router.replace({
-      ...route,
-      query: { page: page },
-    });
-  };
+  const emptySubtitle = computed<string>(() => {
+    switch (route.params.filterBy) {
+      case FilterProposalsBy.Review:
+        return 'Пока нет ни одного отклика на рассмотрение';
+      case FilterProposalsBy.Approved:
+        return 'Пока нет ни одного одобренного отклика';
+      case FilterProposalsBy.Rejected:
+        return 'Пока нет ни одного отклонённого отклика';
+      default:
+        return '';
+    }
+  });
 </script>
 
 <template>
@@ -62,40 +63,65 @@
         Отклонённые
       </RouterLink>
     </div>
-    <CardsLoading v-if="responsesQuery.isLoading.value" :height="10" :per-page="10" />
-    <template v-if="responsesQuery.data.value">
-      <BaseStub v-if="responsesQuery.data.value.count === 0" title="Нет откликов"></BaseStub>
-      <template v-else>
-        <ul class="list">
-          <li v-for="response of responsesQuery.data.value.responses" :key="response.id">
-            <ProposalCard
-              :title="response.candidate.fio"
-              :state="response.state"
-              :approve="() => reviewResponse({ responseId: response.id, stateId: 4 })"
-              :reject="() => reviewResponse({ responseId: response.id, stateId: 5 })"
-            >
-              <template #main>
-                <p v-if="response.candidate.post">
-                  Должность: <span>{{ response.candidate.post }}</span>
-                </p>
-                <p v-if="response.candidate.group">
-                  Группа: <span>{{ response.candidate.group }}</span>
-                </p>
-                <div class="skills">
-                  <p>Навыки:</p>
-                  <SkillList :skill-ids="response.candidate.skills" />
-                </div>
-              </template>
-            </ProposalCard>
-          </li>
-        </ul>
-        <BasePagination
-          :total-items="responsesQuery.data.value.count"
-          :current-page="page"
-          :set-page="changePage"
-        />
+    <BaseList
+      :is-loading="responsesQuery.isLoading.value"
+      :is-error="responsesQuery.isError.value"
+      empty-title="Нет откликов"
+      :empty-subtitle="emptySubtitle"
+      :total-items="responsesQuery.data.value?.quantity || 0"
+    >
+      <template #list>
+        <li v-for="response of responsesQuery.data.value?.responses" :key="response.id">
+          <ProposalCard
+            :title="response.candidate.fio"
+            :state="response.state"
+            :approve="() => reviewResponse({ responseId: response.id, stateId: 4, comment: '' })"
+            :comment-reject="
+              (comment) => reviewResponse({ responseId: response.id, stateId: 5, comment: comment })
+            "
+          >
+            <template #main>
+              <p v-if="response.candidate.post">
+                Должность: <span>{{ response.candidate.post }}</span>
+              </p>
+              <p v-if="response.candidate.group">
+                Группа: <span>{{ response.candidate.group }}</span>
+              </p>
+            </template>
+            <template #footer>
+              <div class="skills">
+                <p>Навыки:</p>
+                <SkillList :skill-ids="response.candidate.skills" />
+              </div>
+            </template>
+            <template #info>
+              <p>
+                Телефон: <span>{{ response.candidate.phone }}</span>
+              </p>
+              <p>
+                Почта: <span>{{ response.candidate.email }}</span>
+              </p>
+              <p>
+                Институт: <span>{{ response.candidate.institute }}</span>
+              </p>
+              <p v-if="response.candidate.post">
+                Должность: <span>{{ response.candidate.post }}</span>
+              </p>
+              <p v-if="response.candidate.group">
+                Группа: <span>{{ response.candidate.group }}</span>
+              </p>
+              <p>
+                Компетенции: <span>{{ response.candidate.competencies }}</span>
+              </p>
+              <div class="skills">
+                <p>Навыки:</p>
+                <SkillList :skill-ids="response.candidate.skills" />
+              </div>
+            </template>
+          </ProposalCard>
+        </li>
       </template>
-    </template>
+    </BaseList>
   </template>
 </template>
 
@@ -126,22 +152,12 @@
     color: var(--light-color);
     border: none;
   }
-  .list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  p {
-    font-size: 1.125rem;
-    span {
-      font-size: 1.125rem;
-      font-weight: bold;
-    }
-  }
   .skills {
     display: flex;
     align-items: center;
-    margin-top: 0.75rem;
     gap: 0.5rem;
+    p {
+      font-weight: bold;
+    }
   }
 </style>

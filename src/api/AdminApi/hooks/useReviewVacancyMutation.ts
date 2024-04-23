@@ -20,7 +20,7 @@ export const useReviewVacancyMutation = () => {
       return { toastId };
     },
     onSuccess: async (data, variables, context) => {
-      await queryClient.invalidateQueries(['vacancy_offers']);
+      await queryClient.invalidateQueries();
       toast.remove(context?.toastId);
       toast.success('Вакансия рассмотрена');
     },

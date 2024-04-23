@@ -22,7 +22,9 @@
   <BaseModal :is-show="isShow" @close="onCloseModal">
     <div class="content">
       <h1>{{ title }}</h1>
-      <p><slot></slot></p>
+      <main class="main">
+        <slot></slot>
+      </main>
       <div class="button">
         <BaseButton @click="onCloseModal">Хорошо</BaseButton>
       </div>
@@ -30,7 +32,7 @@
   </BaseModal>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .content {
     width: 40rem;
     display: flex;
@@ -40,9 +42,17 @@
       font-size: 1.5rem;
       font-weight: bold;
     }
+  }
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     p {
       font-size: 1.125rem;
-      font-weight: normal;
+      font-weight: bold;
+      span {
+        font-size: 1.125rem;
+      }
     }
   }
   .button {

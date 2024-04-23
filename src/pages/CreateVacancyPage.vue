@@ -10,11 +10,12 @@
   import BaseTextarea from '@/components/ui/BaseTextarea.vue';
   import FormSection from '@/components/ui/FormSection.vue';
   import SkillList from '@/components/ui/SkillList.vue';
-  import SkillsEditModal from '@/components/ui/modal/editSkillModal/SkillsEditModal.vue';
+  import SkillsEditModal from '@/components/ui/modal/editSkillModal/SkillModal.vue';
   import { VacancyFormType } from '@/models/Vacancy';
   import { RouteNames } from '@/router/types/routeNames';
   import { ref, watch } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import { toast } from 'vue3-toastify';
 
   const route = useRoute();
   const router = useRouter();
@@ -23,7 +24,7 @@
   const vacancyId = Number(route.query.vacancyId);
 
   const { data: project } = useGetSingleProjectQuery(projectId);
-  const { data: vacancy } = useGetSingleVacancyQuery(Number(vacancyId));
+  const { data: vacancy } = useGetSingleVacancyQuery(Number(vacancyId) || 1);
   const { data: userData } = useGetUserInfoQuery();
 
   const defaultVacancyFormValue: VacancyFormType = {
@@ -71,6 +72,31 @@
   const { mutate: createVacancy } = useCreateVacancyMutation();
   const { mutate: updateVacancy } = useUpdateVacancyMutation();
   const onSubmit = () => {
+    if (!vacancyFormValue.value.title) {
+      toast.warning('Заполните название вакансии');
+      return;
+    }
+    if (!vacancyFormValue.value.dateStart) {
+      toast.warning('Выберите дату начала');
+      return;
+    }
+    if (!vacancyFormValue.value.dateEnd) {
+      toast.warning('Выберите дату окончания');
+      return;
+    }
+    if (!vacancyFormValue.value.responsibilities) {
+      toast.warning('Заполните обязанности');
+      return;
+    }
+    if (!vacancyFormValue.value.requirements) {
+      toast.warning('Заполните требования');
+      return;
+    }
+    if (!vacancyFormValue.value.conditions) {
+      toast.warning('Заполните условия');
+      return;
+    }
+
     if (vacancyId) {
       updateVacancy({ vacancyData: vacancyFormValue.value, vacancyId: Number(vacancyId) });
       return;

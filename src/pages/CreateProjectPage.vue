@@ -1,9 +1,74 @@
 <script setup lang="ts">
+  import { useCreateProjectMutation } from '@/api/AdminApi/hooks/useCreateProjectMutation';
+  import { useGetSupervisorListQuery } from '@/api/AdminApi/hooks/useGetSupervisorListQuery';
   import BaseButton from '@/components/ui/BaseButton.vue';
-  import BaseInput from '@/components/ui/BaseInput.vue';
   import BasePanel from '@/components/ui/BasePanel.vue';
   import BaseTextarea from '@/components/ui/BaseTextarea.vue';
   import FormSection from '@/components/ui/FormSection.vue';
+  import { ProjectFormType } from '@/models/Project';
+  import { MultiselectObjectItem } from '@/models/components/VMultiselect';
+  import { RouteNames } from '@/router/types/routeNames';
+  import VMultiselect from '@vueform/multiselect';
+  import { computed, ref } from 'vue';
+  import { toast } from 'vue3-toastify';
+
+  const supervisorListQuery = useGetSupervisorListQuery();
+
+  const defaultProjectFormValue: ProjectFormType = {
+    title: '',
+    supervisorId: undefined,
+    dateStart: undefined,
+    dateEnd: undefined,
+    description: '',
+    goal: '',
+    conditions: '',
+  };
+
+  const supervisorListMultiselect = computed<MultiselectObjectItem<number>[]>(
+    () =>
+      supervisorListQuery.data.value?.map((supervisor) => ({
+        label: supervisor.fio,
+        value: supervisor.id,
+      })) || [],
+  );
+
+  const projectFormValue = ref<ProjectFormType>({
+    ...defaultProjectFormValue,
+  });
+
+  const { mutate: createProject } = useCreateProjectMutation();
+
+  const onCreate = () => {
+    if (!projectFormValue.value.title) {
+      toast.warning('Заполните название НИОКР');
+      return;
+    }
+    if (!projectFormValue.value.supervisorId) {
+      toast.warning('Выберите руководителя НИОКР');
+      return;
+    }
+    if (!projectFormValue.value.dateStart) {
+      toast.warning('Выберите дату начала');
+      return;
+    }
+    if (!projectFormValue.value.dateEnd) {
+      toast.warning('Выберите дату окончания');
+      return;
+    }
+    if (!projectFormValue.value.description) {
+      toast.warning('Заполните описание НИОКР');
+      return;
+    }
+    if (!projectFormValue.value.goal) {
+      toast.warning('Заполните ожидаемые результаты НИОКР');
+      return;
+    }
+    if (!projectFormValue.value.conditions) {
+      toast.warning('Заполните условия НИОКР');
+      return;
+    }
+    createProject(projectFormValue.value);
+  };
 </script>
 
 <template>
@@ -12,24 +77,30 @@
       <div class="block">
         <div>
           <h1 class="header">Название НИОКР</h1>
-          <BaseTextarea placeholder="Например, Разработка интерактивных веб-приложений" />
+          <BaseTextarea
+            v-model="projectFormValue.title"
+            placeholder="Например, Разработка интерактивных веб-приложений"
+          />
         </div>
         <div>
           <h1 class="header">Руководитель</h1>
-          <BaseInput
+          <VMultiselect
+            v-model="projectFormValue.supervisorId"
             placeholder="Выберите руководителя НИОКР"
-            class="search-input"
-            type="text"
-            inputmode="email"
-            maxlength="100"
+            no-results-text="Руководитель не найден"
+            no-options-text="Руководители не найдены"
+            :searchable="true"
+            :options="supervisorListMultiselect"
+            :disabled="supervisorListQuery.isLoading.value"
+            :loading="supervisorListQuery.isLoading.value"
           />
         </div>
         <div>
           <h1 class="header">Период работы</h1>
           <div class="date">
-            <input type="date" name="" id="" />
+            <input v-model="projectFormValue.dateStart" type="date" name="" id="" />
             <span>—</span>
-            <input type="date" name="" id="" />
+            <input v-model="projectFormValue.dateEnd" type="date" name="" id="" />
           </div>
         </div>
       </div>
@@ -39,25 +110,32 @@
         <div>
           <h1 class="header">Описание</h1>
           <BaseTextarea
-            placeholder="Например, в этом проекте вы будете заниматься разработкой интерактивных веб-приложений. Это отличная возможность применить свои навыки веб-разработки и создать увлекательные веб-приложения."
+            v-model="projectFormValue.description"
+            placeholder="Например, В этом проекте вы будете заниматься разработкой интерактивных веб-приложений. Это отличная возможность применить свои навыки веб-разработки и создать увлекательные веб-приложения."
           />
         </div>
         <div>
           <h1 class="header">Ожидаемые результаты</h1>
           <BaseTextarea
-            placeholder="Например, разработать интерактивные веб-приложения, которые предоставят пользователю уникальный и привлекательный опыт."
+            v-model="projectFormValue.goal"
+            placeholder="Например, Разработать интерактивные веб-приложения, которые предоставят пользователю уникальный и привлекательный опыт."
           />
         </div>
         <div>
           <h1 class="header">Условия</h1>
-          <BaseTextarea placeholder="Например, полный день, полная занятость." />
+          <BaseTextarea
+            v-model="projectFormValue.conditions"
+            placeholder="Например, Полный день, полная занятость."
+          />
         </div>
       </div>
     </FormSection>
   </BasePanel>
   <div class="buttons">
-    <BaseButton variant="outlined" color="red">Сбросить и выйти</BaseButton>
-    <BaseButton>Подать заявку</BaseButton>
+    <BaseButton variant="outlined" color="red" is="router-link" :to="{ name: RouteNames.USER_INFO }"
+      >Сбросить и выйти</BaseButton
+    >
+    <BaseButton @click="onCreate">Создать НИОКР</BaseButton>
   </div>
 </template>
 

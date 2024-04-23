@@ -6,10 +6,10 @@ import { askForUserRole, setUserToCookies } from './utils/mockCookie';
 export default class UserApi implements UserApiType {
   async auth(): Promise<void> {
     if (import.meta.env.VITE_MOCK_AUTH) {
-      const role = askForUserRole();
-      if (!role) return;
+      const token = askForUserRole();
+      if (!token) return;
 
-      setUserToCookies(role);
+      setUserToCookies(token);
       window.location.reload();
       return;
     }

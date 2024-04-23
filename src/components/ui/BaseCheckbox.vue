@@ -53,7 +53,7 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .label[aria-disabled='true'] {
     color: var(--gray-color-2) !important;
     cursor: default !important;
@@ -66,6 +66,10 @@
     font-size: 1.125rem;
     font-weight: normal;
     user-select: none;
+
+    &:not(:last-child) {
+      margin-bottom: 0.8125rem;
+    }
   }
 
   .label:hover {

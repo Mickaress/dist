@@ -12,7 +12,7 @@ export const useCloseProjectMutation = () => {
       return { toastId };
     },
     onSuccess: async (data, variables, context) => {
-      await queryClient.invalidateQueries(['supervisor_projects']);
+      await queryClient.invalidateQueries();
       toast.remove(context?.toastId);
       toast.success('НИОКР закрыт');
     },

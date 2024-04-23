@@ -12,7 +12,7 @@ export const useCloseVacancyMutation = () => {
       return { toastId };
     },
     onSuccess: async (data, variables, context) => {
-      await queryClient.invalidateQueries(['project_vacancies']);
+      await queryClient.invalidateQueries();
       toast.remove(context?.toastId);
       toast.success('Вакансия закрыта');
     },

@@ -6,6 +6,6 @@ export const useGetAllSkillsQuery = () => {
     queryKey: ['skills'],
     queryFn: () => skillApi.getAllSkills(),
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 };

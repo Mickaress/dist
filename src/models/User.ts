@@ -1,8 +1,9 @@
-export type UserRole = 'student_candidate' | 'employee_candidate' | 'supervisor' | 'admin';
+export type UserRole = 'candidate' | 'supervisor' | 'admin';
 
 type SharedUserType = {
   id: number;
   fio: string;
+  role: UserRole;
 };
 
 // candidate

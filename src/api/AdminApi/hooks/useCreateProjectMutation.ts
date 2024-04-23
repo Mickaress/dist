@@ -1,15 +1,15 @@
-import { VacancyFormType } from '@/models/Vacancy';
+import { ProjectFormType } from '@/models/Project';
 import { RouteNames } from '@/router/types/routeNames';
 import { useMutation } from '@tanstack/vue-query';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
-import { supervisorApi } from '..';
+import { adminApi } from '..';
 
-export const useCreateVacancyMutation = () => {
+export const useCreateProjectMutation = () => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (vacancyData: VacancyFormType) => supervisorApi.createVacancy(vacancyData),
+    mutationFn: (projectData: ProjectFormType) => adminApi.createProject(projectData),
     onMutate: () => {
       const toastId = toast.loading('Обработка запроса');
       return { toastId };
@@ -17,12 +17,9 @@ export const useCreateVacancyMutation = () => {
     onSuccess: async (data, variables, context) => {
       toast.remove(context?.toastId);
       router.replace({
-        name: RouteNames.SUPERVISOR_PROJECT_VACANCIES,
-        params: {
-          projectId: variables.projectId,
-        },
+        name: RouteNames.PROJECTS,
       });
-      toast.success('Вакансия отправлена на рассмотрение');
+      toast.success('НИОКР создан');
     },
     onError: (error, variables, context) => {
       toast.remove(context?.toastId);

@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/vue-query';
 import { adminApi } from '..';
 
-export const useGetProjectsInterestQuery = () => {
+export const useGetSupervisorListQuery = () => {
   return useQuery({
-    queryKey: ['projects_interest'],
-    queryFn: () => adminApi.getProjectsInterest(),
+    queryKey: ['supervisors'],
+    queryFn: () => adminApi.getSupervisorList(),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

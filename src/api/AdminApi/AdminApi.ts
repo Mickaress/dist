@@ -1,12 +1,12 @@
-import { ProjectType } from '@/models/Project';
+import { ProjectFormType } from '@/models/Project';
 import { SkillOfferListType, VacancyOfferListType } from '@/models/Proposal';
+import { SupervisorType } from '@/models/User';
 import { axiosInstance } from '../axiosInstance';
 import AdminApiType from './AdminApiType';
 
 export default class AdminApi implements AdminApiType {
-  async getProjectsInterest(): Promise<ProjectType[]> {
-    const response = await axiosInstance.get('/admin/projects');
-    return response.data;
+  async createProject(projectData: ProjectFormType): Promise<void> {
+    await axiosInstance.post('/admin/project', projectData);
   }
   async getSkillOffers(page: number): Promise<SkillOfferListType> {
     const response = await axiosInstance.get('/admin/skills', {
@@ -38,5 +38,11 @@ export default class AdminApi implements AdminApiType {
       stateId: stateId,
       comment: comment,
     });
+  }
+
+  async getSupervisorList(): Promise<SupervisorType[]> {
+    const response = await axiosInstance.get('/admin/supervisors');
+
+    return response.data;
   }
 }

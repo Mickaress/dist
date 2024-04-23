@@ -1,8 +1,7 @@
-import { CandidateResponseType } from '@/models/Response';
+import { ResponseListType } from '@/models/Proposal';
 
 export default interface CandidateApiType {
-  //getCandidateSkills(): Promise<SkillType[]>;
-  getCandidateResponses(): Promise<CandidateResponseType[]>;
+  getCandidateResponses(page: number): Promise<ResponseListType>;
   createResponse(vacancyId: number): Promise<void>;
   updateSkills(skillIds: number[]): Promise<void>;
   updateCompetencies(competencies: string): Promise<void>;

@@ -10,14 +10,26 @@ export type ProjectType = {
   description: string;
   goal: string;
   period: string;
+  dateStart: string;
+  dateEnd: string;
   state: StateType;
   payment: boolean;
   views: number;
   skills: number[];
-  vacancies: Pick<VacancyType, 'id' | 'title' | 'salary' | 'responsibilities'>[];
+  vacancies: VacancyType[];
 };
 
 export type ProjectListType = {
   projects: ProjectType[];
-  projectsCount: number;
+  quantity: number;
+};
+
+export type ProjectFormType = {
+  title: string;
+  supervisorId: number | undefined;
+  dateStart: string | undefined;
+  dateEnd: string | undefined;
+  description: string;
+  goal: string;
+  conditions: string;
 };

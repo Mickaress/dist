@@ -9,6 +9,7 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach(() => window.scrollTo({ left: 0, top: 0 }));
 router.beforeEach(fetchUserData);
 router.beforeEach(requiresAuth);
 router.beforeEach(checkUserRole);

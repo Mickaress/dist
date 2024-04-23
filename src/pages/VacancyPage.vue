@@ -1,126 +1,183 @@
 <script setup lang="ts">
   import { useCreateResponseMutation } from '@/api/CandidateApi/hooks/useCreateResponseMutation';
+  import { useCloseProjectMutation } from '@/api/SupervisorApi/hooks/useCloseProjectMutation';
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import { useGetSingleVacancyQuery } from '@/api/VacancyApi/hooks/useGetSingleVacancyQuery';
-  import ProjectListCard from '@/components/project/ProjectListCard.vue';
   import AppList from '@/components/ui/AppList.vue';
   import BaseBreadcrumbs from '@/components/ui/BaseBreadcrumbs.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
+  import BaseCard from '@/components/ui/BaseCard.vue';
   import BasePanel from '@/components/ui/BasePanel.vue';
   import BaseStub from '@/components/ui/BaseStub.vue';
   import GridLayout from '@/components/ui/GridLayout.vue';
   import SkillList from '@/components/ui/SkillList.vue';
-  import AuthModal from '@/components/ui/modal/AuthModal.vue';
+  import ConfirmModal from '@/components/ui/modal/ConfirmModal.vue';
   import { RouteNames } from '@/router/types/routeNames';
+  import { createVacancyRoute, projectRoute } from '@/router/utils/route';
   import { ref } from 'vue';
   import { useRoute } from 'vue-router';
 
   const route = useRoute();
   const vacancyId = Number(route.params.id);
 
-  const { data: vacancy, isFetching, isError } = useGetSingleVacancyQuery(vacancyId);
+  const vacancyQuery = useGetSingleVacancyQuery(vacancyId);
 
   const { mutate: createResponse } = useCreateResponseMutation();
-
-  const isShowModal = ref<boolean>(false);
-
   const { data: userData } = useGetUserInfoQuery();
+  const { mutate: closeProject } = useCloseProjectMutation();
+
+  const deletableProjectId = ref<number>(0);
+  const isShowDeleteModal = ref<boolean>(false);
+
+  const onCloseProject = (projectId: number) => {
+    deletableProjectId.value = projectId;
+    isShowDeleteModal.value = true;
+  };
 
   const response = (id: number) => {
-    if (!userData.value) {
-      isShowModal.value = true;
-      return;
-    }
-
     createResponse(id);
   };
 </script>
 
 <template>
-  <div class="content">
-    <BaseStub v-if="isFetching" title="Загрузка..."></BaseStub>
-    <BaseStub v-if="isError" title="Ошибка сервера"></BaseStub>
-    <template v-if="vacancy">
-      <BaseBreadcrumbs
-        :breadcrumbs="[
-          { title: 'Все вакансии', to: { name: RouteNames.VACANCIES } },
-          { title: vacancy.title || '' },
-        ]"
-      />
-      <header class="header">
-        <h1>{{ vacancy.title }}</h1>
-        <template v-if="userData && userData.id !== vacancy.project.supervisor.id">
-          <BaseButton @click="response(vacancy.id)">Откликнуться</BaseButton>
+  <!-- Modals -->
+  <ConfirmModal
+    v-model:is-show="isShowDeleteModal"
+    question="Вы уверены, что хотите закрыть этот НИОКР?"
+    :agree-action="() => closeProject(deletableProjectId)"
+    agree-answer="Закрыть"
+    disagree-answer="Отмена"
+  />
+  <!-- Modals -->
+  <BaseStub v-if="vacancyQuery.isLoading.value" title="Загрузка..."></BaseStub>
+  <BaseStub
+    v-if="vacancyQuery.isError.value"
+    title="Ошибка сервера"
+    subtitle="В данный момент сервер не отвечает"
+  ></BaseStub>
+  <template v-if="vacancyQuery.data.value">
+    <BaseBreadcrumbs
+      :breadcrumbs="[
+        { title: 'Все вакансии', to: { name: RouteNames.VACANCIES } },
+        { title: vacancyQuery.data.value.title || '' },
+      ]"
+    />
+    <header class="header">
+      <h1>{{ vacancyQuery.data.value.title }}</h1>
+      <template v-if="userData && userData.id !== vacancyQuery.data.value.project.supervisor.id">
+        <BaseButton v-if="vacancyQuery.data.value.isResponse" disabled>Уже откликнулись</BaseButton>
+        <BaseButton v-else @click="response(vacancyQuery.data.value.id)">Откликнуться</BaseButton>
+      </template>
+    </header>
+    <BasePanel>
+      <GridLayout cols="2fr 1fr 1fr 1fr">
+        <AppList
+          :items="[
+            {
+              title: 'Оплата',
+              content:
+                vacancyQuery.data.value.salary === 0
+                  ? 'Без оплаты'
+                  : `${vacancyQuery.data.value.salary} ₽`,
+            },
+            {
+              title: 'Период работы',
+              content: `${vacancyQuery.data.value.period}`,
+            },
+            {
+              title: 'Условия труда',
+              content: `${vacancyQuery.data.value.conditions}`,
+            },
+            {
+              title: 'Руководитель',
+              content: `${vacancyQuery.data.value.project.supervisor.fio}`,
+            },
+            {
+              title: 'Контакты руководителя',
+              content: `${vacancyQuery.data.value.project.supervisor.email} ${vacancyQuery.data.value.project.supervisor.phone}`,
+            },
+          ]"
+        />
+        <div class="info">
+          <h1>Требуемые навыки:</h1>
+          <SkillList isVisible :skill-ids="vacancyQuery.data.value.skills" />
+        </div>
+        <div class="info">
+          <h1>Обязанности:</h1>
+          <p>{{ vacancyQuery.data.value.responsibilities }}</p>
+        </div>
+        <div class="info">
+          <h1>Требования:</h1>
+          <p>{{ vacancyQuery.data.value.requirements }}</p>
+        </div>
+      </GridLayout>
+    </BasePanel>
+    <footer class="footer">
+      <BaseCard
+        :title="vacancyQuery.data.value.project.title"
+        :link="projectRoute(vacancyQuery.data.value.project.id)"
+        :state="vacancyQuery.data.value.project.state"
+        is-divide
+      >
+        <template #header>
+          <p>{{ vacancyQuery.data.value.project.supervisor.fio }}</p>
         </template>
-      </header>
-      <BasePanel>
-        <GridLayout cols="2fr 1fr 1fr 1fr">
-          <AppList
-            :items="[
-              {
-                title: 'Оплата',
-                content: vacancy.salary === 0 ? 'Без оплаты' : `${vacancy.salary} ₽`,
-              },
-              {
-                title: 'Период работы',
-                content: `${vacancy.period}`,
-              },
-              {
-                title: 'Условия труда',
-                content: `${vacancy.conditions}`,
-              },
-              {
-                title: 'Руководитель',
-                content: `${vacancy.project.supervisor.fio}`,
-              },
-              {
-                title: 'Контакты руководителя',
-                content: `${vacancy.project.supervisor.email} ${vacancy.project.supervisor.phone}`,
-              },
-            ]"
-          />
-          <div class="info">
-            <h1>Требуемые навыки:</h1>
-            <SkillList isVisible :skill-ids="vacancy.skills" />
-          </div>
-          <div class="info">
-            <h1>Обязанности:</h1>
-            <p>{{ vacancy.responsibilities }}</p>
-          </div>
-          <div class="info">
-            <h1>Требования:</h1>
-            <p>{{ vacancy.requirements }}</p>
-          </div>
-        </GridLayout>
-      </BasePanel>
-      <footer class="footer">
-        <ProjectListCard :project="vacancy.project" />
-        <BaseButton variant="text" @click="$router.push({ name: RouteNames.VACANCIES })">
-          Назад к списку
-        </BaseButton>
-      </footer>
-      <AuthModal v-model:isShow="isShowModal" />
-    </template>
-  </div>
+        <template #main>
+          <p>
+            Описание:
+            <span>{{ vacancyQuery.data.value.project.description }}</span>
+          </p>
+          <p>
+            Цель:
+            <span>{{ vacancyQuery.data.value.project.goal }}</span>
+          </p>
+          <p>
+            Период работы:
+            <span> {{ vacancyQuery.data.value.project.period }} </span>
+          </p>
+        </template>
+        <template #footer>
+          <SkillList :skillIds="vacancyQuery.data.value.project.skills" />
+        </template>
+        <template #buttons>
+          <template v-if="vacancyQuery.data.value.project.supervisor.id === userData?.id">
+            <BaseButton
+              color="red"
+              variant="outlined"
+              @click="onCloseProject(vacancyQuery.data.value.project.id)"
+            >
+              Закрыть НИОКР
+            </BaseButton>
+            <BaseButton
+              is="router-link"
+              variant="outlined"
+              :to="createVacancyRoute(vacancyQuery.data.value.project.id)"
+            >
+              Добавить вакансию
+            </BaseButton>
+          </template>
+          <BaseButton is="router-link" :to="projectRoute(vacancyQuery.data.value.project.id)">
+            Подробнее
+          </BaseButton>
+        </template>
+      </BaseCard>
+      <BaseButton variant="text" @click="$router.push({ name: RouteNames.VACANCIES })">
+        Назад к списку
+      </BaseButton>
+    </footer>
+  </template>
 </template>
 
 <style lang="scss" scoped>
-  .content {
-    margin-top: 2rem;
-  }
-  .status {
-    margin-top: 2rem;
-  }
-
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-top: 1.6875rem;
+    margin-bottom: 1.875rem;
     h1 {
       font-size: 2.25rem;
       font-weight: bold;
-      margin-top: 1.6875rem;
-      margin-bottom: 1.875rem;
     }
   }
 

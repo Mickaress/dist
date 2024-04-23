@@ -6,6 +6,6 @@ export const useGetSingleProjectQuery = (projectId: number) => {
     queryKey: ['project', projectId],
     queryFn: () => projectApi.getSingleProject(projectId),
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 };

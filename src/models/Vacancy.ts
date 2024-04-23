@@ -14,12 +14,13 @@ export type VacancyType = {
   skills: number[];
   project: Omit<ProjectType, 'conditions' | 'vacancies'>;
   state: StateType;
-  comment: String;
+  comment: string;
+  isResponse: boolean;
 };
 
 export type VacancyListType = {
   vacancies: VacancyType[];
-  vacancyCount: number;
+  quantity: number;
 };
 
 export type VacancyFormType = {

@@ -1,88 +1,192 @@
 <script setup lang="ts">
-  import { useGetProjectListWithFiltersQuery } from '@/api/ProjectApi/hooks/useGetProjectListWithFiltersQuery';
-  import CardsLoading from '@/components/CardsLoading.vue';
+  import { useGetProjectListQuery } from '@/api/ProjectApi/hooks/useGetProjectListQuery';
+  import { useGetAllSkillsQuery } from '@/api/SkillApi/hooks/useGetAllSkillsQuery';
+  import { useCloseProjectMutation } from '@/api/SupervisorApi/hooks/useCloseProjectMutation';
+  import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
+  import searchIconUrl from '@/assets/icons/search.svg?url';
+  import BaseList from '@/components/BaseList.vue';
   import SidebarLayout from '@/components/layout/SidebarLayout.vue';
-  import ProjectList from '@/components/project/ProjectList.vue';
-  import ProjectListFilter from '@/components/project/ProjectListFilter.vue';
-  import ProjectSearch from '@/components/project/ProjectSearch.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
-  import BasePagination from '@/components/ui/BasePagination.vue';
-  import BaseStub from '@/components/ui/BaseStub.vue';
-  import { useProjectFilterStore } from '@/stores/projectFilter/useProjectFilterStore';
+  import BaseCard from '@/components/ui/BaseCard.vue';
+  import BaseCheckbox from '@/components/ui/BaseCheckbox.vue';
+  import BaseInput from '@/components/ui/BaseInput.vue';
+  import SkillList from '@/components/ui/SkillList.vue';
+  import ConfirmModal from '@/components/ui/modal/ConfirmModal.vue';
+  import { useFilters } from '@/hooks/useFilters';
+  import { createVacancyRoute, projectRoute } from '@/router/utils/route';
+  import VMultiselect from '@vueform/multiselect';
+  import { ref, watch } from 'vue';
+  const projectListQuery = useGetProjectListQuery();
 
-  const projectListQuery = useGetProjectListWithFiltersQuery();
+  const skillListQuery = useGetAllSkillsQuery();
 
-  const projectFilterStore = useProjectFilterStore();
+  const { clearFilter, filter, filters, debouncedInput } = useFilters();
 
-  const setPage = (page: number) => {
-    projectFilterStore.updateFilters({ page: page });
-    window.scrollTo({
-      top: 0,
-    });
+  watch(
+    () => filters.value.title,
+    () => {
+      debouncedInput();
+    },
+  );
+
+  const { data: userData } = useGetUserInfoQuery();
+  const { mutate: closeProject } = useCloseProjectMutation();
+
+  const deletableProjectId = ref<number>(0);
+  const isShowDeleteModal = ref<boolean>(false);
+
+  const onCloseProject = (projectId: number) => {
+    deletableProjectId.value = projectId;
+    isShowDeleteModal.value = true;
   };
-  // TODO: Вынести ProjectSearch в header
+  // TODO: Вынести фильтр в отдельный компонент
 </script>
 
 <template>
-  <header class="header">
-    <h1 class="title">Все НИОКР</h1>
-    <p class="subtitle">На этой странице размещены все НИОКР</p>
-  </header>
-  <aside class="header-controls">
-    <ProjectSearch />
-  </aside>
+  <!-- Modals -->
+  <ConfirmModal
+    v-model:is-show="isShowDeleteModal"
+    question="Вы уверены, что хотите закрыть этот НИОКР?"
+    :agree-action="() => closeProject(deletableProjectId)"
+    agree-answer="Закрыть"
+    disagree-answer="Отмена"
+  />
+  <!-- Modals -->
   <SidebarLayout>
+    <template #header>
+      <h1>Все НИОКР</h1>
+      <h2>На этой странице размещены все НИОКР</h2>
+      <BaseInput
+        v-model="filters.title"
+        :icon="searchIconUrl"
+        placeholder="Поиск по НИОКР..."
+        type="text"
+        inputmode="email"
+        maxlength="100"
+      />
+    </template>
     <template #sidebar>
-      <ProjectListFilter />
+      <form class="filter" @submit.prevent="filter">
+        <div>
+          <h1 class="filter__title">Оплата проекта</h1>
+          <BaseCheckbox value="true" v-model="filters.payment"> С оплатой </BaseCheckbox>
+          <BaseCheckbox value="false" v-model="filters.payment"> Без оплаты </BaseCheckbox>
+        </div>
+        <div class="filter__divider"></div>
+        <div>
+          <h1 class="filter__title">Навыки</h1>
+          <VMultiselect
+            v-model="filters.skills"
+            mode="tags"
+            placeholder="Введите навык"
+            no-results-text="Навык не найдена"
+            no-options-text="Навыки не найдены"
+            :close-on-select="false"
+            :searchable="true"
+            :options="skillListQuery.data.value"
+            :disabled="skillListQuery.isFetching.value"
+            :loading="skillListQuery.isFetching.value"
+            label="name"
+            track-by="name"
+            value-prop="id"
+          />
+        </div>
+        <div class="filter__divider"></div>
+        <footer class="filter__footer">
+          <BaseButton full-width type="submit"> Найти </BaseButton>
+          <BaseButton variant="text" type="button" @click="clearFilter" full-width>
+            Сбросить фильтры
+          </BaseButton>
+        </footer>
+      </form>
     </template>
     <template #main>
-      <CardsLoading v-if="projectListQuery.isLoading.value" />
-      <BaseStub
-        v-if="projectListQuery.isError.value"
-        title="Ошибка сервера"
-        subtitle="В данный момент сервер не отвечает"
+      <BaseList
+        :is-loading="projectListQuery.isLoading.value"
+        :is-mini="false"
+        :is-error="projectListQuery.isError.value"
+        empty-title="НИОКР не найдены"
+        empty-subtitle="Пока нет ни одного НИОКР с введённым названием и/или выбранными фильтрами"
+        :total-items="projectListQuery.data.value?.quantity || 0"
       >
-      </BaseStub>
-      <template v-if="projectListQuery.data.value">
-        <BaseStub
-          v-if="projectListQuery.data.value?.projectsCount === 0"
-          title="НИОКР не найдены"
-          subtitle="Пока нет ни одного НИОКР с введённым названием и/или выбранными фильтрами"
-        >
-          <template #button>
-            <BaseButton @click="projectFilterStore.clearFilter()">
-              Сбросить фильтры
-            </BaseButton>
-          </template>
-        </BaseStub>
-        <template v-else>
-          <ProjectList :projectList="projectListQuery.data.value?.projects" />
-          <BasePagination
-            :total-items="projectListQuery.data.value?.projectsCount || 1"
-            :setPage="setPage"
-            :currentPage="projectFilterStore.page"
-          />
+        <template #empty-button>
+          <BaseButton @click="clearFilter"> Сбросить фильтры </BaseButton>
         </template>
-      </template>
+        <template #list>
+          <li v-for="project in projectListQuery.data.value?.projects" :key="project.id">
+            <BaseCard
+              :title="project.title"
+              :link="projectRoute(project.id)"
+              :state="project.state"
+              is-divide
+            >
+              <template #header>
+                <p>{{ project.supervisor.fio }}</p>
+              </template>
+              <template #main>
+                <p>
+                  Описание:
+                  <span>{{ project.description }}</span>
+                </p>
+                <p>
+                  Цель:
+                  <span>{{ project.goal }}</span>
+                </p>
+                <p>
+                  Период работы:
+                  <span> {{ project.period }} </span>
+                </p>
+              </template>
+              <template #footer>
+                <SkillList :skillIds="project.skills" />
+              </template>
+              <template #buttons>
+                <template v-if="project.supervisor.id === userData?.id">
+                  <BaseButton color="red" variant="outlined" @click="onCloseProject(project.id)">
+                    Закрыть НИОКР
+                  </BaseButton>
+                  <BaseButton
+                    is="router-link"
+                    variant="outlined"
+                    :to="createVacancyRoute(project.id)"
+                  >
+                    Добавить вакансию
+                  </BaseButton>
+                </template>
+                <BaseButton is="router-link" :to="projectRoute(project.id)"> Подробнее </BaseButton>
+              </template>
+            </BaseCard>
+          </li>
+        </template>
+      </BaseList>
     </template>
   </SidebarLayout>
 </template>
 
 <style lang="scss" scoped>
-  .header {
-    margin-top: 4.75rem;
-    margin-bottom: 2.8125rem;
-  }
-  .title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 0.6875rem;
-  }
-  .subtitle {
-    font-size: 1.125rem;
-    font-weight: normal;
-  }
-  .header-controls {
-    margin-bottom: 1.125rem;
+  .filter {
+    background-color: var(--light-color);
+    padding: 1.25rem;
+    border-radius: 0.625rem;
+    border: 0.0625rem solid var(--medium-gray-color);
+
+    &__title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    &__divider {
+      width: 100%;
+      background: var(--medium-gray-color);
+      height: 0.0625rem;
+      margin: 1.25rem 0;
+    }
+
+    &__footer {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+    }
   }
 </style>

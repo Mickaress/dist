@@ -23,6 +23,6 @@ export const useGetSupervisorProjectsQuery = () => {
     queryKey: ['supervisor_projects', page],
     queryFn: () => supervisorApi.getSupervisorProjects(page.value),
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 };

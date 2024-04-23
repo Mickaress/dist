@@ -41,16 +41,11 @@
     --light-main-color: var(--light-accent-color);
 
     text-transform: uppercase;
-    text-decoration: none;
-    display: inline-flex;
-    gap: 0.75rem;
-    align-items: center;
-    justify-content: center;
-    border: 0;
-    cursor: pointer;
     border-radius: 0.3125rem;
-    transition: 20ms ease;
     white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+
     &.red {
       --main-color: var(--red-color);
       --dark-main-color: var(--dark-red-color);
@@ -77,6 +72,7 @@
     &:disabled {
       background-color: var(--dark-gray-color);
       border-color: var(--dark-gray-color);
+      cursor: default;
     }
   }
 

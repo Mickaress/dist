@@ -1,87 +1,109 @@
 <script setup lang="ts">
   import BaseBadge from '@/components/ui/BaseBadge.vue';
-  import type { ProjectType } from '@/models/Project';
   import { StateClass, StateType } from '@/models/State';
+  import { RouteLocationRaw, RouterLink } from 'vue-router';
   import BasePanel from '../ui/BasePanel.vue';
 
   type Props = {
-    project: Omit<ProjectType, 'conditions' | 'vacancies'>;
     title: String;
+    link?: RouteLocationRaw;
     state: StateType;
+    isDivide?: boolean;
   };
 
-  defineProps<Props>();
-
-  // TODO: вряд ли нужен
+  withDefaults(defineProps<Props>(), {
+    isDivide: false,
+  });
 </script>
 
 <template>
   <BasePanel>
-    <header class="header">
-      <div class="wrapper">
-        <h1>{{ title }}</h1>
-        <BaseBadge :class="StateClass[state.id]">{{ state.state }}</BaseBadge>
-      </div>
-      <slot name="header"> </slot>
+    <header class="card__header">
+      <RouterLink v-if="link" :to="link">
+        {{ title }}
+      </RouterLink>
+      <h1 v-else>{{ title }}</h1>
+      <BaseBadge :class="StateClass[state.id]">{{ state.state }}</BaseBadge>
+      <slot name="header"></slot>
     </header>
-    <div class="divider"></div>
-    <main class="main">
+    <div v-if="isDivide" class="card__divider"></div>
+    <main class="card__main">
       <slot name="main"> </slot>
     </main>
-    <footer class="footer">
-      <slot name="footer"></slot>
+    <footer class="card__footer">
+      <div><slot name="footer"></slot></div>
+      <div class="card__buttons">
+        <slot name="buttons"></slot>
+      </div>
     </footer>
   </BasePanel>
 </template>
 
-<style lang="scss" scoped>
-  .header {
-  }
-  .wrapper {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: center;
-  }
-  .header {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: start;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 0.75rem;
+<style lang="scss">
+  .card {
+    &__header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
 
-      &:hover {
-        text-decoration: underline;
+      h1,
+      a {
+        font-size: 1.5rem;
+      }
+
+      a {
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      h2 {
+        font-size: 1.25rem;
+        font-weight: normal;
+        grid-column: 1 / -1;
+      }
+
+      p {
+        font-weight: normal;
+        grid-column: 1 / -1;
       }
     }
-    p {
-      font-weight: normal;
-      grid-column: 1 / -1;
+
+    &__divider {
+      width: 100%;
+      height: 0.125rem;
+      background-color: var(--medium-gray-color);
+      margin: 0.875rem 0;
     }
-  }
-  .divider {
-    width: 100%;
-    height: 0.125rem;
-    background-color: var(--medium-gray-color);
-    margin-bottom: 0.875rem;
-  }
-  .main {
-    p {
-      font-weight: bold;
-      margin-bottom: 1rem;
+
+    &__main {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      p {
+        font-weight: bold;
+      }
     }
-  }
-  .footer {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.25rem;
-    align-items: end;
-  }
-  .buttons {
-    display: flex;
-    gap: 8px;
+
+    &__footer {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    &__buttons {
+      margin-top: auto;
+      align-items: center;
+      display: flex;
+      gap: 0.5rem;
+
+      p {
+        text-transform: uppercase;
+      }
+    }
   }
 </style>

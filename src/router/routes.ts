@@ -5,11 +5,10 @@ import FaqPage from '@/pages/FaqPage.vue';
 import NotFoundPage from '@/pages/NotFoundPage.vue';
 import ProjectDetails from '@/pages/ProjectPage/ProjectDetails.vue';
 import ProjectPage from '@/pages/ProjectPage/ProjectPage.vue';
-import ProjectVacanciesList from '@/pages/ProjectPage/ProjectVacanciesList.vue';
+import ProjectVacancyList from '@/pages/ProjectPage/ProjectVacancyList.vue';
 import ProjectsPage from '@/pages/ProjectsPage.vue';
 import UserInfo from '@/pages/UserPage/UserInfo.vue';
 import UserPage from '@/pages/UserPage/UserPage.vue';
-import ProjectsInterest from '@/pages/UserPage/admin/ProjectsInterest.vue';
 import SkillOffers from '@/pages/UserPage/admin/SkillOffers.vue';
 import VacancyOffers from '@/pages/UserPage/admin/VacancyOffers.vue';
 import CandidateResponses from '@/pages/UserPage/candidate/CandidateResponses.vue';
@@ -86,7 +85,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'vacancies',
         name: RouteNames.PROJECT_VACANCIES,
-        component: ProjectVacanciesList,
+        component: ProjectVacancyList,
         meta: {
           title: 'Список вакансий',
         },
@@ -120,7 +119,7 @@ export const routes: RouteRecordRaw[] = [
           title: 'Мои отклики',
           type: ['user-nav'],
           order: 1,
-          role: ['student_candidate', 'employee_candidate'],
+          role: ['candidate'],
         },
       },
       {
@@ -174,16 +173,6 @@ export const routes: RouteRecordRaw[] = [
           title: 'Заявки на навыки',
           type: ['user-nav'],
           order: 1,
-          role: ['admin'],
-        },
-      },
-      {
-        path: 'projects_interest',
-        name: RouteNames.PROJECTS_INTEREST,
-        component: ProjectsInterest,
-        meta: {
-          title: 'Заинтересованность в НИОКР',
-          order: 2,
           role: ['admin'],
         },
       },

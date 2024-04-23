@@ -8,6 +8,10 @@
   --ms-radius: 0.3125rem;
   --ms-option-font-size: 1.125rem;
   --ms-font-size: 1.125rem;
+  --ms-option-bg-selected-pointed: var(--accent-color);
+  --ms-option-color-selected-pointed: var(--light-color);
+  --ms-option-color-selected: var(--light-color);
+  --ms-option-bg-selected: var(--accent-color);
   --ms-bg-disabled: var(--light-gray-color);
   --ms-border-color-active: var(--accent-color);
 
@@ -15,6 +19,12 @@
 
   &.is-disabled {
     color: var(--dark-gray-color);
+  }
+}
+
+.multiselect-option.is-selected {
+  span {
+    color: var(--light-color);
   }
 }
 

@@ -19,6 +19,7 @@
   .header {
     background: var(--light-color);
     border-bottom: 1px solid var(--medium-gray-color);
+    margin-bottom: 2rem;
   }
   .container {
     display: flex;

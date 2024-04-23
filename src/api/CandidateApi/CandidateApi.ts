@@ -1,10 +1,14 @@
-import { CandidateResponseType } from '@/models/Response';
+import { ResponseListType } from '@/models/Proposal';
 import { axiosInstance } from '../axiosInstance';
 import CandidateApiType from './CandidateApiType';
 
 export default class CandidateApi implements CandidateApiType {
-  async getCandidateResponses(): Promise<CandidateResponseType[]> {
-    const response = await axiosInstance.get(`/candidate/responses`);
+  async getCandidateResponses(page: number): Promise<ResponseListType> {
+    const response = await axiosInstance.get(`/candidate/responses`, {
+      params: {
+        page: page,
+      },
+    });
     return response.data;
   }
   async createResponse(vacancyId: number): Promise<void> {

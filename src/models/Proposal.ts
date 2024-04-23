@@ -8,15 +8,18 @@ export const enum FilterProposalsBy {
   Rejected = 'rejected',
 }
 
-export type CandidateResponseType = {
+export type ResponseType = {
   id: number;
   state: StateType;
   candidate: CandidateType;
+  vacancy: VacancyType;
+  date: string;
+  comment: string;
 };
 
-export type CandidateResponseListType = {
-  responses: CandidateResponseType[];
-  count: number;
+export type ResponseListType = {
+  responses: ResponseType[];
+  quantity: number;
 };
 
 export type SkillOfferType = {
@@ -27,10 +30,10 @@ export type SkillOfferType = {
 
 export type SkillOfferListType = {
   skills: SkillOfferType[];
-  count: number;
+  quantity: number;
 };
 
 export type VacancyOfferListType = {
   vacancies: VacancyType[];
-  count: number;
+  quantity: number;
 };

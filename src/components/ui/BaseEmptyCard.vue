@@ -1,9 +1,11 @@
 <script setup lang="ts">
   type Props = {
-    height: number;
+    isMini: boolean;
   };
 
-  defineProps<Props>();
+  const props = defineProps<Props>();
+
+  const height = props.isMini ? 10 : 25;
 </script>
 
 <template>
