@@ -1,9 +1,11 @@
 <script setup lang="ts">
   import { useGetSingleProjectQuery } from '@/api/ProjectApi/hooks/useGetSingleProjectQuery';
-  import ProjectTabs from '@/components/ProjectTabs.vue';
+  import BaseBadge from '@/components/ui/BaseBadge.vue';
   import BaseBreadcrumbs from '@/components/ui/BaseBreadcrumbs.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import BaseStub from '@/components/ui/BaseStub.vue';
+  import ProjectTabs from '@/components/ui/ProjectTabs.vue';
+  import { StateClass } from '@/models/State';
   import { RouteNames } from '@/router/types/routeNames';
   import { RouterView, useRoute } from 'vue-router';
 
@@ -21,14 +23,17 @@
     subtitle="В данный момент сервер не отвечает"
   ></BaseStub>
   <template v-if="projectQuery.data.value">
+    <BaseBreadcrumbs
+      :breadcrumbs="[
+        { title: 'Все НИОКР', to: { name: RouteNames.PROJECTS } },
+        { title: projectQuery.data.value?.title || '' },
+      ]"
+    />
     <header class="header">
-      <BaseBreadcrumbs
-        :breadcrumbs="[
-          { title: 'Все НИОКР', to: { name: RouteNames.PROJECTS } },
-          { title: projectQuery.data.value?.title || '' },
-        ]"
-      />
       <h1>{{ projectQuery.data.value?.title }}</h1>
+      <BaseBadge :class="StateClass[projectQuery.data.value.state.id]">
+        {{ projectQuery.data.value.state.state }}
+      </BaseBadge>
     </header>
     <ProjectTabs v-if="projectQuery.data.value" />
     <RouterView />
@@ -42,13 +47,16 @@
 
 <style lang="scss" scoped>
   .header {
-    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: space-between;
+    margin-top: 1.6875rem;
+    margin-bottom: 1.875rem;
 
     h1 {
       font-size: 2.25rem;
-      font-weight: 700;
-      margin-top: 1.6875rem;
-      margin-bottom: 1.875rem;
+      font-weight: bold;
     }
   }
   .info {

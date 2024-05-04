@@ -41,21 +41,34 @@
 </template>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .content {
-    width: 40rem;
-    margin: 2.5rem 0 2.5rem;
+    min-width: 100%;
+    margin-top: 2.5rem;
     h1 {
       font-size: 2.5rem;
       max-width: 31.25rem;
       text-align: center;
       margin: auto;
       font-weight: bold;
-      margin-bottom: 3.125rem;
+
+      @media (width <= $mobile) {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (width <= $mobile) {
+      font-size: 1.5rem;
     }
   }
   .buttons {
     display: flex;
     justify-content: center;
     gap: 1.25rem;
+
+    @media (width <= $mobile) {
+      flex-direction: column;
+    }
   }
 </style>

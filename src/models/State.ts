@@ -1,9 +1,9 @@
 export const enum StateID {
   Active = 1,
-  Archived = 2,
+  Approved = 2,
   Review = 3,
-  Approved = 4,
-  Rejected = 5,
+  Rejected = 4,
+  Archived = 5,
 }
 
 export type StateType = {

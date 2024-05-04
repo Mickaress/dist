@@ -1,5 +1,5 @@
 import { StateType } from './State';
-import { CandidateType } from './User';
+import { SpecialistType } from './User';
 import { VacancyType } from './Vacancy';
 
 export const enum FilterProposalsBy {
@@ -11,7 +11,7 @@ export const enum FilterProposalsBy {
 export type ResponseType = {
   id: number;
   state: StateType;
-  candidate: CandidateType;
+  candidate: SpecialistType;
   vacancy: VacancyType;
   date: string;
   comment: string;

@@ -185,7 +185,7 @@
   .block {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1.25rem;
   }
   .header {
     font-weight: bold;
@@ -205,13 +205,13 @@
   }
   .date {
     display: flex;
-    gap: 8px;
+    gap: 0.5rem;
     align-items: center;
     input {
-      font-size: 18px;
+      font-size: 1.125rem;
       border: 1px solid var(--medium-gray-color);
       border-radius: 0.3125rem;
-      padding: 12px;
+      padding: 0.75rem;
       outline: none;
       &:focus {
         border-color: var(--accent-color);
@@ -222,7 +222,7 @@
     display: flex;
     justify-content: end;
     gap: 1rem;
-    margin-top: 40px;
+    margin-top: 2.5rem;
   }
   .wrapper {
     display: flex;

@@ -4,9 +4,12 @@
   import BasePanel from '@/components/ui/BasePanel.vue';
   import GridLayout from '@/components/ui/GridLayout.vue';
   import SkillList from '@/components/ui/SkillList.vue';
+  import { useDesktop } from '@/hooks/useBreakpoints';
   import { useRoute } from 'vue-router';
 
   const route = useRoute();
+
+  const isDesktop = useDesktop();
 
   const projectId = Number(route.params.id);
   const projectQuery = useGetSingleProjectQuery(projectId);
@@ -14,7 +17,7 @@
 
 <template>
   <BasePanel class="panel" v-if="projectQuery.data.value">
-    <GridLayout cols="1fr 1fr">
+    <GridLayout :cols="isDesktop ? '1fr 1fr' : '1fr'">
       <AppList
         :items="[
           {
@@ -54,11 +57,17 @@
 </template>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .panel {
     margin-bottom: 1rem;
   }
 
   .info {
+    @media (width <= $tablet) {
+      margin-top: 1.5rem;
+    }
+
     h1 {
       font-size: 1.125rem;
       margin-bottom: 0.625rem;

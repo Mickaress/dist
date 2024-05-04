@@ -34,10 +34,10 @@
     }
 
     img {
-      height: 14px;
-      padding: 2px;
+      height: 0.875rem;
+      padding: 0.125rem;
       filter: brightness(0) invert(1);
-      margin-left: 5px;
+      margin-left: 0.3125rem;
     }
   }
 </style>

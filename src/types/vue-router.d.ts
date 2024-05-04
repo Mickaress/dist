@@ -1,13 +1,13 @@
-import 'vue-router';
+import { UserRole } from '@/models/User';
 import { RouteNames } from '@/router/types/route-names';
-import { UserRoleKey } from '@/models/User';
+import 'vue-router';
 
 type NavType = 'main-nav' | 'user-nav' | 'mobile-nav';
 
 declare module 'vue-router' {
   interface RouteMeta {
     type?: NavType[];
-    role?: UserRoleKey[];
+    role?: UserRole[];
     order?: number;
     title: string;
     requiresAuth?: boolean;

@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { useCreateResponseMutation } from '@/api/CandidateApi/hooks/useCreateResponseMutation';
-  import { useCloseProjectMutation } from '@/api/SupervisorApi/hooks/useCloseProjectMutation';
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import { useGetSingleVacancyQuery } from '@/api/VacancyApi/hooks/useGetSingleVacancyQuery';
   import AppList from '@/components/ui/AppList.vue';
+  import BaseBadge from '@/components/ui/BaseBadge.vue';
   import BaseBreadcrumbs from '@/components/ui/BaseBreadcrumbs.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import BaseCard from '@/components/ui/BaseCard.vue';
@@ -11,10 +11,10 @@
   import BaseStub from '@/components/ui/BaseStub.vue';
   import GridLayout from '@/components/ui/GridLayout.vue';
   import SkillList from '@/components/ui/SkillList.vue';
-  import ConfirmModal from '@/components/ui/modal/ConfirmModal.vue';
+  import { useDesktop } from '@/hooks/useBreakpoints';
+  import { StateClass } from '@/models/State';
   import { RouteNames } from '@/router/types/routeNames';
-  import { createVacancyRoute, projectRoute } from '@/router/utils/route';
-  import { ref } from 'vue';
+  import { projectRoute } from '@/router/utils/route';
   import { useRoute } from 'vue-router';
 
   const route = useRoute();
@@ -24,15 +24,8 @@
 
   const { mutate: createResponse } = useCreateResponseMutation();
   const { data: userData } = useGetUserInfoQuery();
-  const { mutate: closeProject } = useCloseProjectMutation();
 
-  const deletableProjectId = ref<number>(0);
-  const isShowDeleteModal = ref<boolean>(false);
-
-  const onCloseProject = (projectId: number) => {
-    deletableProjectId.value = projectId;
-    isShowDeleteModal.value = true;
-  };
+  const isDesktop = useDesktop();
 
   const response = (id: number) => {
     createResponse(id);
@@ -40,15 +33,6 @@
 </script>
 
 <template>
-  <!-- Modals -->
-  <ConfirmModal
-    v-model:is-show="isShowDeleteModal"
-    question="Вы уверены, что хотите закрыть этот НИОКР?"
-    :agree-action="() => closeProject(deletableProjectId)"
-    agree-answer="Закрыть"
-    disagree-answer="Отмена"
-  />
-  <!-- Modals -->
   <BaseStub v-if="vacancyQuery.isLoading.value" title="Загрузка..."></BaseStub>
   <BaseStub
     v-if="vacancyQuery.isError.value"
@@ -63,14 +47,31 @@
       ]"
     />
     <header class="header">
-      <h1>{{ vacancyQuery.data.value.title }}</h1>
+      <div class="header_h1">
+        <h1>{{ vacancyQuery.data.value.title }}</h1>
+        <BaseBadge :class="StateClass[vacancyQuery.data.value.state.id]">
+          {{ vacancyQuery.data.value.state.state }}
+        </BaseBadge>
+      </div>
       <template v-if="userData && userData.id !== vacancyQuery.data.value.project.supervisor.id">
-        <BaseButton v-if="vacancyQuery.data.value.isResponse" disabled>Уже откликнулись</BaseButton>
-        <BaseButton v-else @click="response(vacancyQuery.data.value.id)">Откликнуться</BaseButton>
+        <template
+          v-if="
+            userData &&
+            userData.role === 'specialist' &&
+            vacancyQuery.data.value.project.supervisor.id !== userData.id
+          "
+        >
+          <BaseButton v-if="vacancyQuery.data.value.isResponse" disabled>
+            Уже откликнулись
+          </BaseButton>
+          <BaseButton v-else @click="response(vacancyQuery.data.value.id)" variant="outlined">
+            Откликнуться
+          </BaseButton>
+        </template>
       </template>
     </header>
     <BasePanel>
-      <GridLayout cols="2fr 1fr 1fr 1fr">
+      <GridLayout :cols="isDesktop ? '2fr 1fr 1fr 1fr' : '1fr'">
         <AppList
           :items="[
             {
@@ -140,22 +141,6 @@
           <SkillList :skillIds="vacancyQuery.data.value.project.skills" />
         </template>
         <template #buttons>
-          <template v-if="vacancyQuery.data.value.project.supervisor.id === userData?.id">
-            <BaseButton
-              color="red"
-              variant="outlined"
-              @click="onCloseProject(vacancyQuery.data.value.project.id)"
-            >
-              Закрыть НИОКР
-            </BaseButton>
-            <BaseButton
-              is="router-link"
-              variant="outlined"
-              :to="createVacancyRoute(vacancyQuery.data.value.project.id)"
-            >
-              Добавить вакансию
-            </BaseButton>
-          </template>
           <BaseButton is="router-link" :to="projectRoute(vacancyQuery.data.value.project.id)">
             Подробнее
           </BaseButton>
@@ -169,21 +154,32 @@
 </template>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 1.6875rem;
     margin-bottom: 1.875rem;
-    h1 {
-      font-size: 2.25rem;
-      font-weight: bold;
+    &_h1 {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+
+      h1 {
+        font-size: 2.25rem;
+        font-weight: bold;
+      }
     }
   }
 
   .info {
+    @media (width <= $tablet) {
+      margin-top: 1.5rem;
+    }
+
     h1 {
-      font-weight: normal;
       font-size: 1.125rem;
       margin-bottom: 0.625rem;
     }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { useGetCandidateResponsesQuery } from '@/api/CandidateApi/hooks/useGetCandidateResponsesQuery';
-  import BaseList from '@/components/BaseList.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import BaseCard from '@/components/ui/BaseCard.vue';
+  import BaseList from '@/components/ui/BaseList.vue';
   import InformationModal from '@/components/ui/modal/InformationModal.vue';
   import { StateID } from '@/models/State';
   import { vacancyRoute } from '@/router/utils/route';

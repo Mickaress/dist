@@ -3,10 +3,11 @@
   import GridLayout from '@/components/ui/GridLayout.vue';
   import CandidateCompetencies from '@/components/user/candidate/CandidateCompetencies.vue';
   import CandidateSkills from '@/components/user/candidate/CandidateSkills.vue';
-  import { CandidateType } from '@/models/User';
+  import { useMobile } from '@/hooks/useBreakpoints';
+  import { SpecialistType } from '@/models/User';
 
   type Props = {
-    userInfo: CandidateType;
+    userInfo: SpecialistType;
   };
 
   const props = defineProps<Props>();
@@ -35,15 +36,18 @@
       content: `${props.userInfo.post}`,
     });
   }
+
+  const isSmallDevice = useMobile();
 </script>
 
 <template>
-  <GridLayout cols="1fr 1fr">
+  <GridLayout :cols="isSmallDevice ? '1fr' : '1fr 1fr'">
     <div>
       <section class="section">
         <h1>Контактная информация</h1>
         <AppList
           class="app-list"
+          :width="10"
           :items="[
             {
               title: 'E-Mail:',
@@ -58,7 +62,7 @@
       </section>
       <section class="section">
         <h1>Дополнительная информация</h1>
-        <AppList class="app-list" :items="items" />
+        <AppList class="app-list" :width="10" :items="items" />
       </section>
     </div>
     <div>
@@ -70,7 +74,7 @@
 
 <style lang="scss" scoped>
   .section {
-    margin-bottom: 3.125rem;
+    margin-bottom: 1.625rem;
     h1 {
       font-size: 1.125rem;
       font-weight: bold;

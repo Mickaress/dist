@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { useCloseVacancyMutation } from '@/api/SupervisorApi/hooks/useCloseVacancyMutation';
   import { useGetSupervisorProjectVacanciesQuery } from '@/api/SupervisorApi/hooks/useGetSupervisorProjectVacanciesQuery';
-  import BaseList from '@/components/BaseList.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import BaseCard from '@/components/ui/BaseCard.vue';
+  import BaseList from '@/components/ui/BaseList.vue';
   import SkillList from '@/components/ui/SkillList.vue';
   import ConfirmModal from '@/components/ui/modal/ConfirmModal.vue';
   import InformationModal from '@/components/ui/modal/InformationModal.vue';

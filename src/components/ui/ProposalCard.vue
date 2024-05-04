@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { StateType } from '@/models/State';
+  import { StateID, StateType } from '@/models/State';
   import { ref } from 'vue';
   import BaseButton from './BaseButton.vue';
   import BaseCard from './BaseCard.vue';
@@ -40,7 +40,7 @@
   <InputModal
     v-model:is-show="isShowRejectModal"
     title="Причина отклонения"
-    placeholder="Например, Ошибка в обязанностях"
+    placeholder="Например, Ошибки"
     :submit-function="(comment) => onCommentReject(comment)"
     submit-text="Отправить"
   />
@@ -49,8 +49,15 @@
     <template #main><slot name="main"></slot></template>
     <template #footer><slot name="footer"></slot></template>
     <template #buttons>
-      <BaseButton variant="outlined" v-if="state.id !== 4" @click="approve"> Одобрить </BaseButton>
-      <BaseButton variant="outlined" color="red" v-if="state.id !== 5" @click="onReject">
+      <BaseButton variant="outlined" v-if="state.id !== StateID.Approved" @click="approve">
+        Одобрить
+      </BaseButton>
+      <BaseButton
+        variant="outlined"
+        color="red"
+        v-if="state.id !== StateID.Rejected"
+        @click="onReject"
+      >
         Отклонить
       </BaseButton>
       <BaseButton v-if="$slots['info']" @click="isShowInfoModal = true">Подробнее</BaseButton>

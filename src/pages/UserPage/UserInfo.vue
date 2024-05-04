@@ -2,24 +2,20 @@
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import BasePanel from '@/components/ui/BasePanel.vue';
-  import { AdminType, CandidateType, SupervisorType } from '@/models/User';
+  import { AdminType, SpecialistType } from '@/models/User';
   import AdminInfo from './admin/AdminInfo.vue';
   import CandidateInfo from './candidate/CandidateInfo.vue';
-  import SupervisorInfo from './supervisor/SupervisorInfo.vue';
 
   const { data } = useGetUserInfoQuery();
 
-  // TODO: Костыль
-  const CandidateData = data.value as CandidateType;
-  const SupervisorData = data.value as SupervisorType;
+  const SpecialistData = data.value as SpecialistType;
   const AdminData = data.value as AdminType;
 </script>
 
 <template>
   <BasePanel v-if="data" class="info">
     <h1 class="fio">{{ data.fio }}</h1>
-    <CandidateInfo v-if="CandidateData.institute" :user-info="CandidateData" />
-    <SupervisorInfo v-else-if="SupervisorData.phone" :user-info="SupervisorData" />
+    <CandidateInfo v-if="SpecialistData.institute" :user-info="SpecialistData" />
     <AdminInfo v-else :user-info="AdminData" />
     <BaseButton variant="outlined" is="a" href="https://int.istu.edu/" target="_blank">
       Редактировать профиль
@@ -36,6 +32,7 @@
       font-weight: bold;
       margin-bottom: 1.5rem;
       padding-bottom: 1.5rem;
+      white-space: pre-wrap;
     }
     a {
       align-self: flex-end;

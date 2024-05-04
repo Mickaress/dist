@@ -79,9 +79,15 @@
 </template>
 
 <style scoped lang="scss">
+  @import '@styles/breakpoints';
+
   .skill-modal {
     h1 {
       font-size: 1.875rem;
+
+      @media (width <= $mobile) {
+        max-width: 18.75rem;
+      }
     }
 
     &__selected-skills {
@@ -100,7 +106,10 @@
 
     &__wrapper {
       display: flex;
-      gap: 0.25rem;
+      gap: 1.25rem;
+      @media (width <= $mobile) {
+        flex-direction: column;
+      }
     }
 
     &__button {

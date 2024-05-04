@@ -6,21 +6,13 @@
   import BasePanel from '@/components/ui/BasePanel.vue';
   import BaseStub from '@/components/ui/BaseStub.vue';
   import BaseTable from '@/components/ui/BaseTable.vue';
-  import { VacancyType } from '@/models/Vacancy';
   import { vacancyRoute } from '@/router/utils/route';
-  import { computed } from 'vue';
   import { useRoute } from 'vue-router';
 
   const route = useRoute();
   const projectId = Number(route.params.id);
 
   const projectQuery = useGetSingleProjectQuery(projectId);
-
-  const sortedVacancies = computed<VacancyType[]>(() => {
-    if (!projectQuery.data.value) return [];
-    const vacancies = projectQuery.data.value.vacancies;
-    return [...vacancies].sort((a, b) => a.title.localeCompare(b.title));
-  });
 
   const { mutate: createResponse } = useCreateResponseMutation();
 
@@ -29,15 +21,18 @@
 
 <template>
   <BasePanel>
-    <BaseStub v-if="sortedVacancies.length === 0" title="У данного НИОКР нет вакансий"></BaseStub>
-    <BaseTable v-else class="table" :headers="['Название вакансии', 'Обязанности', 'Зарплата', '']">
+    <BaseStub
+      v-if="projectQuery.data.value?.vacancies.length === 0"
+      title="У данного НИОКР нет вакансий"
+    ></BaseStub>
+    <BaseTable v-else class="table" :headers="['Название вакансии', 'Обязанности', 'Оплата', '']">
       <tr v-for="row in projectQuery.data.value?.vacancies" :key="row.id">
         <td>{{ row.title }}</td>
         <td>{{ row.responsibilities }}</td>
         <td>{{ row.salary === 0 ? 'Без оплаты' : `${row.salary} ₽` }}</td>
         <td>
           <div class="buttons">
-            <template v-if="userData?.role === 'candidate'">
+            <template v-if="userData?.role === 'specialist'">
               <BaseButton v-if="row.isResponse" disabled>Уже откликнулись</BaseButton>
               <BaseButton v-else @click="createResponse(row.id)" variant="outlined">
                 Откликнуться

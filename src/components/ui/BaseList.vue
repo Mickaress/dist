@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { MINI_PER_PAGE, PER_PAGE } from '@/constants';
+  import { MINI_CARD_PER_PAGE, PER_PAGE } from '@/constants';
+  import BasePagination from './BasePagination.vue';
+  import BaseStub from './BaseStub.vue';
   import CardsLoading from './CardsLoading.vue';
-  import BasePagination from './ui/BasePagination.vue';
-  import BaseStub from './ui/BaseStub.vue';
 
   type Props = {
     isLoading: boolean;
@@ -36,7 +36,7 @@
       <BasePagination
         v-if="!isLoading"
         :totalItems="totalItems"
-        :page-size="isMini ? MINI_PER_PAGE : PER_PAGE"
+        :page-size="isMini ? MINI_CARD_PER_PAGE : PER_PAGE"
       />
     </template>
   </template>

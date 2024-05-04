@@ -1,22 +1,20 @@
 <script setup lang="ts">
   import { useCreateResponseMutation } from '@/api/CandidateApi/hooks/useCreateResponseMutation';
   import { useGetAllSkillsQuery } from '@/api/SkillApi/hooks/useGetAllSkillsQuery';
-  import { useCloseVacancyMutation } from '@/api/SupervisorApi/hooks/useCloseVacancyMutation';
   import { useGetUserInfoQuery } from '@/api/UserApi/hooks/useGetUserInfoQuery';
   import { useGetVacancyListQuery } from '@/api/VacancyApi/hooks/useGetVacancyListQuery';
   import searchIconUrl from '@/assets/icons/search.svg?url';
-  import BaseList from '@/components/BaseList.vue';
   import SidebarLayout from '@/components/layout/SidebarLayout.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import BaseCard from '@/components/ui/BaseCard.vue';
   import BaseCheckbox from '@/components/ui/BaseCheckbox.vue';
   import BaseInput from '@/components/ui/BaseInput.vue';
+  import BaseList from '@/components/ui/BaseList.vue';
   import SkillList from '@/components/ui/SkillList.vue';
-  import ConfirmModal from '@/components/ui/modal/ConfirmModal.vue';
   import { useFilters } from '@/hooks/useFilters';
-  import { toVacancyResponses, vacancyRoute } from '@/router/utils/route';
+  import { vacancyRoute } from '@/router/utils/route';
   import VMultiselect from '@vueform/multiselect';
-  import { ref, watch } from 'vue';
+  import { watch } from 'vue';
 
   const vacancyListQuery = useGetVacancyListQuery();
 
@@ -26,17 +24,7 @@
 
   const { mutate: createResponse } = useCreateResponseMutation();
 
-  const { mutate: closeVacancy } = useCloseVacancyMutation();
-
   const { clearFilter, filter, filters, debouncedInput } = useFilters();
-
-  const deletableVacancyId = ref<number>(0);
-  const isShowDeleteModal = ref<boolean>(false);
-
-  const onCloseVacancy = (vacancyId: number) => {
-    deletableVacancyId.value = vacancyId;
-    isShowDeleteModal.value = true;
-  };
 
   watch(
     () => filters.value.title,
@@ -50,15 +38,6 @@
 </script>
 
 <template>
-  <!-- Modals -->
-  <ConfirmModal
-    v-model:is-show="isShowDeleteModal"
-    question="Вы уверены, что хотите закрыть вакансию?"
-    :agree-action="() => closeVacancy(deletableVacancyId)"
-    agree-answer="Закрыть"
-    disagree-answer="Отмена"
-  />
-  <!-- Modals -->
   <SidebarLayout>
     <template #header>
       <h1>Все вакансии</h1>
@@ -150,25 +129,17 @@
                 <SkillList :skillIds="vacancy.skills" />
               </template>
               <template #buttons>
-                <template v-if="userData">
-                  <template v-if="userData.id === vacancy.project.supervisor.id">
-                    <BaseButton @click="onCloseVacancy(vacancy.id)" variant="outlined" color="red">
-                      Закрыть вакансию
-                    </BaseButton>
-                    <BaseButton
-                      variant="outlined"
-                      is="router-link"
-                      :to="toVacancyResponses(vacancy.id)"
-                    >
-                      Отклики
-                    </BaseButton>
-                  </template>
-                  <template v-else-if="userData?.role === 'candidate'">
-                    <BaseButton v-if="vacancy.isResponse" disabled> Уже откликнулись </BaseButton>
-                    <BaseButton v-else @click="createResponse(vacancy.id)" variant="outlined">
-                      Откликнуться
-                    </BaseButton>
-                  </template>
+                <template
+                  v-if="
+                    userData &&
+                    userData.role === 'specialist' &&
+                    vacancy.project.supervisor.id !== userData.id
+                  "
+                >
+                  <BaseButton v-if="vacancy.isResponse" disabled> Уже откликнулись </BaseButton>
+                  <BaseButton v-else @click="createResponse(vacancy.id)" variant="outlined">
+                    Откликнуться
+                  </BaseButton>
                 </template>
                 <BaseButton is="router-link" :to="vacancyRoute(vacancy.id)"> Подробнее </BaseButton>
               </template>
@@ -181,11 +152,17 @@
 </template>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .filter {
     background-color: var(--light-color);
     padding: 1.25rem;
     border-radius: 0.625rem;
     border: 0.0625rem solid var(--medium-gray-color);
+
+    @media (width <= $tablet) {
+      display: none;
+    }
 
     &__title {
       font-size: 1.25rem;

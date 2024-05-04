@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { useMainNavigationRoutes } from '@/hooks/useRoutes';
   import AppLogo from '../ui/AppLogo.vue';
-  import BaseButton from '../ui/BaseButton.vue';
   import BaseContainer from '../ui/BaseContainer.vue';
 
   const mainRoutes = useMainNavigationRoutes();
@@ -59,9 +58,9 @@
       <nav>
         <ul class="footer__nav-list">
           <li v-for="link in mainRoutes" :key="link.name">
-            <BaseButton variant="text" is="router-link" :to="{ name: link.name }">
+            <RouterLink :to="{ name: link.name }">
               {{ link.meta.title }}
-            </BaseButton>
+            </RouterLink>
           </li>
         </ul>
       </nav>
@@ -73,9 +72,7 @@
         <ul class="footer__info-list">
           <li v-for="contact in adminContacts" :key="contact.name" class="footer__info-list-item">
             <p>{{ contact.name }}</p>
-            <BaseButton variant="text" is="a" :href="contact.href" target="_blank">
-              {{ contact.content }}
-            </BaseButton>
+            <a :href="contact.href" target="_blank">{{ contact.content }}</a>
           </li>
         </ul>
       </section>
@@ -86,9 +83,7 @@
           <li class="footer__info-list-item"><p>664074, г. Иркутск ул. Лермонтова 83</p></li>
           <li v-for="contact in mainContacts" :key="contact.name" class="footer__info-list-item">
             <p>{{ contact.name }}</p>
-            <BaseButton variant="text" is="a" :href="contact.href" target="_blank">
-              {{ contact.content }}
-            </BaseButton>
+            <a :href="contact.href" target="_blank">{{ contact.content }}</a>
           </li>
         </ul>
       </section>
@@ -97,9 +92,14 @@
 </template>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .footer {
     padding: 3.5rem 0 2.25rem;
     margin-top: 8.75rem;
+    @media (width <= $tablet) {
+      margin-top: 2.5rem;
+    }
     background-color: var(--dark-color);
 
     &__container {
@@ -107,6 +107,12 @@
       grid-template-columns: 1fr repeat(4, auto);
       column-gap: 4.375rem;
       max-width: 112.5rem;
+
+      @media (width <= $tablet) {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
     }
 
     &__initials {
@@ -117,6 +123,10 @@
       font-size: 0.875rem;
       line-height: 1.5;
       font-weight: normal;
+
+      @media (width <= $tablet) {
+        margin-top: 1em;
+      }
 
       &:hover {
         text-decoration: underline;
@@ -136,13 +146,21 @@
       gap: 1.25rem;
       a {
         color: var(--light-color);
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
 
     &__divider {
-      width: 0.0625rem;
+      width: 1px;
       height: 100%;
       background-color: var(--light-color);
+
+      @media (width <= $tablet) {
+        width: 100%;
+        height: 1px;
+      }
     }
 
     &__info-title {
@@ -158,7 +176,7 @@
 
     &__info-list-item {
       display: flex;
-      gap: 4px;
+      gap: 0.25rem;
       p {
         font-size: 0.875rem;
         font-weight: normal;
@@ -169,6 +187,9 @@
       a {
         color: var(--dark-gray-color);
         font-size: 0.875rem;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }

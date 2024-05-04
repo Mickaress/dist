@@ -32,10 +32,10 @@
   scrollbar-color: var(--dark-gray-color) transparent;
   scrollbar-width: thin;
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 0.375rem;
   }
   &::-webkit-scrollbar-thumb {
-    border-radius: 10px;
+    border-radius: 0.625rem;
     background-color: var(--dark-gray-color);
   }
 }

@@ -107,8 +107,8 @@
 
   .icon {
     display: inline-block;
-    width: 19px;
-    height: 11px;
+    width: 1.1875rem;
+    height: 0.6875rem;
     background: url('@/assets/icons/dropdown-arrow.svg') center / cover no-repeat;
     transform: rotate(180deg);
     cursor: pointer;

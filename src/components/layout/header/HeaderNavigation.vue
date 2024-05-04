@@ -20,8 +20,14 @@
 </template>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .nav {
     height: 100%;
+
+    @media (width <= $tablet) {
+      display: none;
+    }
   }
 
   .nav-list {

@@ -1,8 +1,8 @@
 <template>
   <div
-    class="row"
+    :class="['row', { divide: cols !== '1fr' }]"
     :style="{
-      gridTemplateColumns: getGridTemplateColumns(props.cols),
+      gridTemplateColumns: getGridTemplateColumns(cols),
     }"
   >
     <slot></slot>
@@ -13,7 +13,7 @@
   type Props = {
     cols: number | string;
   };
-  const props = defineProps<Props>();
+  defineProps<Props>();
 
   function getGridTemplateColumns(cols: number | string): string {
     if (typeof cols === 'string') return cols;
@@ -22,13 +22,23 @@
 </script>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .row {
     display: grid;
+  }
 
+  .divide {
     & > :deep(*:not(:last-child)) {
       padding-right: 1.875rem;
       margin-right: 1.875rem;
       border-right: 0.0625rem solid var(--medium-gray-color);
+
+      @media (width <= $mobile) {
+        border: none;
+        padding-right: 0;
+        margin-right: 0;
+      }
     }
   }
 </style>

@@ -11,7 +11,7 @@
 
   const fio = computed(() => {
     const [f, ...rest] = userInfo.value?.fio.split(' ') || [];
-    return `${f} ${rest.map((str) => str[0]).join('. ')}.`;
+    return `${f} ${rest.map((str: string) => str[0]).join('. ')}.`;
   });
 
   const handleMenuNode = ref<HTMLElement | undefined>(undefined);
@@ -28,34 +28,27 @@
     <p v-if="userInfo" class="username">
       {{ fio }}
     </p>
-    <button
-      v-if="userInfo"
-      :class="['menu-btn', { active: isMenuOpen }]"
-      @click="toggleMenu"
-    >
+    <button v-if="userInfo" :class="['menu-btn', { active: isMenuOpen }]" @click="toggleMenu">
       <img :src="arrowIconUrl" alt="↓" />
     </button>
 
-    <UserNavigationDropdown
-      v-model:is-open="isMenuOpen"
-      :handle-node="handleMenuNode"
-    />
-    <BaseButton
-      v-if="!userInfo"
-      class="auth-btn"
-      variant="text"
-      @click="auth()"
-    >
+    <UserNavigationDropdown v-model:is-open="isMenuOpen" :handle-node="handleMenuNode" />
+    <BaseButton v-if="!userInfo" class="auth-btn" variant="text" @click="auth()">
       Войти
     </BaseButton>
   </div>
 </template>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .actions {
-    gap: 12px;
+    gap: 0.75rem;
     display: flex;
     align-items: center;
+    @media (width <= $tablet) {
+      display: none;
+    }
   }
   .username {
     font-size: 1.125rem;

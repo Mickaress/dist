@@ -1,6 +1,6 @@
 import { ProjectFormType } from '@/models/Project';
 import { SkillOfferListType, VacancyOfferListType } from '@/models/Proposal';
-import { SupervisorType } from '@/models/User';
+import { SpecialistType } from '@/models/User';
 import { axiosInstance } from '../axiosInstance';
 import AdminApiType from './AdminApiType';
 
@@ -40,7 +40,7 @@ export default class AdminApi implements AdminApiType {
     });
   }
 
-  async getSupervisorList(): Promise<SupervisorType[]> {
+  async getSupervisorList(): Promise<SpecialistType[]> {
     const response = await axiosInstance.get('/admin/supervisors');
 
     return response.data;

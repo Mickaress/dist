@@ -30,6 +30,8 @@
 </script>
 
 <style scoped lang="scss">
+  @import '@styles/breakpoints';
+
   h1 {
     font-size: 1.25rem;
     margin-bottom: 0.75rem;
@@ -40,10 +42,19 @@
     padding: 0.875rem;
     border: 1px solid var(--medium-gray-color);
     border-radius: 0.3125rem;
+
+    @media (width <= $tablet) {
+      width: 20rem;
+    }
+
+    @media (width <= $mobile) {
+      width: 100%;
+    }
+
     h2 {
-      font-size: 20px;
+      font-size: 1.25rem;
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 0.625rem;
     }
   }
   form {

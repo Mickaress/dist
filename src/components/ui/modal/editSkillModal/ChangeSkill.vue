@@ -53,6 +53,8 @@
 </template>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   h1 {
     font-size: 1.25rem;
     margin-bottom: 0.75rem;
@@ -66,6 +68,14 @@
     height: 32rem;
     display: flex;
     flex-direction: column;
+
+    @media (width <= $tablet) {
+      width: 20rem;
+    }
+
+    @media (width <= $mobile) {
+      width: 100%;
+    }
   }
   .lists {
     li {
@@ -76,7 +86,7 @@
           text-decoration: underline;
         }
       }
-      padding: 10px 0;
+      padding: 0.625rem 0;
     }
   }
 </style>

@@ -14,6 +14,8 @@
 
 <style lang="scss">
   .sidebar-layout {
+    @import '@styles/breakpoints';
+
     &__header {
       margin-bottom: 1rem;
       h1 {
@@ -35,6 +37,10 @@
       display: grid;
       grid-template-columns: 23.75rem auto;
       gap: 2.125rem;
+
+      @media (width <= $tablet) {
+        grid-template-columns: auto;
+      }
     }
   }
 </style>

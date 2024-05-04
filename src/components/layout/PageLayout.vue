@@ -2,10 +2,12 @@
   import BaseContainer from '../ui/BaseContainer.vue';
   import AppFooter from './AppFooter.vue';
   import AppHeader from './header/AppHeader.vue';
+  import BottomNavigationBar from './mobile/BottomNavigationBar.vue';
 </script>
 
 <template>
   <AppHeader />
+  <BottomNavigationBar />
   <BaseContainer class="container">
     <slot></slot>
   </BaseContainer>

@@ -1,8 +1,9 @@
 <script setup lang="ts">
   import { useGetSkillOffersQuery } from '@/api/AdminApi/hooks/useGetSkillOffersQuery';
   import { useReviewSkillMutation } from '@/api/AdminApi/hooks/useReviewSkillMutation';
-  import BaseList from '@/components/BaseList.vue';
+  import BaseList from '@/components/ui/BaseList.vue';
   import ProposalCard from '@/components/ui/ProposalCard.vue';
+  import { StateID } from '@/models/State';
 
   const skillOffersQuery = useGetSkillOffersQuery();
 
@@ -22,8 +23,8 @@
         <ProposalCard
           :title="skill.name"
           :state="skill.state"
-          :approve="() => reviewSkill({ skillId: skill.id, stateId: 1 })"
-          :reject="() => reviewSkill({ skillId: skill.id, stateId: 5 })"
+          :approve="() => reviewSkill({ skillId: skill.id, stateId: StateID.Active })"
+          :reject="() => reviewSkill({ skillId: skill.id, stateId: StateID.Rejected })"
         >
         </ProposalCard>
       </li>

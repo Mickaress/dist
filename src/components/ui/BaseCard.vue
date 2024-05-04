@@ -40,6 +40,8 @@
 </template>
 
 <style lang="scss">
+  @import '@styles/breakpoints';
+
   .card {
     &__header {
       display: grid;
@@ -93,6 +95,11 @@
       justify-content: space-between;
       gap: 1rem;
       align-items: start;
+
+      @media (width <= $tablet) {
+        flex-direction: column;
+        align-items: normal;
+      }
     }
 
     &__buttons {
@@ -101,8 +108,17 @@
       display: flex;
       gap: 0.5rem;
 
+      @media (width <= $mobile) {
+        flex-direction: column;
+      }
+
       p {
         text-transform: uppercase;
+      }
+
+      button,
+      a {
+        width: 100%;
       }
     }
   }

@@ -33,11 +33,18 @@
 </template>
 
 <style lang="scss">
+  @import '@styles/breakpoints';
+
   .content {
-    width: 40rem;
+    width: 35rem;
     display: flex;
     flex-direction: column;
     gap: 2rem;
+
+    @media (width <= $mobile) {
+      width: 16.25rem;
+    }
+
     h1 {
       font-size: 1.5rem;
       font-weight: bold;

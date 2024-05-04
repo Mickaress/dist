@@ -33,10 +33,15 @@
 </template>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .section {
     margin-bottom: 1.625rem;
     p {
       color: var(--dark-gray-color);
+    }
+    @media (width <= $mobile) {
+      margin-top: 1.625rem;
     }
   }
   .title {

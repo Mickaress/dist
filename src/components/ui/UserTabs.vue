@@ -1,3 +1,21 @@
+<script setup lang="ts">
+  import { useGetSupervisorActiveProjectsQuery } from '@/api/SupervisorApi/hooks/useGetSupervisorActiveProjectsQuery';
+  import { useLogoutMutation } from '@/api/UserApi/hooks/useLogoutMutation';
+  import { useRoleUserNavigationRoutes } from '@/hooks/useRoutes';
+  import { toProjectVacancies } from '@/router/utils/route';
+  import { ref } from 'vue';
+  import { RouterLink } from 'vue-router';
+  import SimpleAccordion from '../ui/accordion/SimpleAccordion.vue';
+  import ConfirmModal from '../ui/modal/ConfirmModal.vue';
+  const routes = useRoleUserNavigationRoutes();
+
+  const isShowModal = ref<boolean>(false);
+
+  const { mutate: logout } = useLogoutMutation();
+
+  const { data: projects } = useGetSupervisorActiveProjectsQuery();
+</script>
+
 <template>
   <!-- Modals -->
   <ConfirmModal
@@ -14,7 +32,7 @@
         <RouterLink class="user-tabs__action" :to="{ name: link.name }" v-if="!link.meta.links">
           {{ link.meta.title }}
         </RouterLink>
-        <SimpleAccordion v-else default-opened>
+        <SimpleAccordion v-else-if="projects && projects?.length !== 0" default-opened disabled>
           <template #title>
             <p class="user-tabs__action">
               {{ link.meta.title }}
@@ -38,24 +56,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-  import { useGetSupervisorActiveProjectsQuery } from '@/api/SupervisorApi/hooks/useGetSupervisorActiveProjectsQuery';
-  import { useLogoutMutation } from '@/api/UserApi/hooks/useLogoutMutation';
-  import { useRoleUserNavigationRoutes } from '@/hooks/useRoutes';
-  import { toProjectVacancies } from '@/router/utils/route';
-  import { ref } from 'vue';
-  import { RouterLink } from 'vue-router';
-  import SimpleAccordion from '../ui/accordion/SimpleAccordion.vue';
-  import ConfirmModal from '../ui/modal/ConfirmModal.vue';
-  const routes = useRoleUserNavigationRoutes();
-
-  const isShowModal = ref<boolean>(false);
-
-  const { mutate: logout } = useLogoutMutation();
-
-  const { data: projects } = useGetSupervisorActiveProjectsQuery();
-</script>
-
 <style lang="scss" scoped>
   .user-tabs {
     border: 1px solid var(--medium-gray-color);
@@ -67,7 +67,7 @@
       width: 100%;
 
       &-item {
-        &:not(:last-child) {
+        &:not(:empty) {
           border-bottom: 1px solid var(--medium-gray-color);
         }
       }

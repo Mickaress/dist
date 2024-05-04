@@ -1,9 +1,10 @@
 <script setup lang="ts">
   import { useGetVacancyOffersQuery } from '@/api/AdminApi/hooks/useGetVacancyOffersQuery';
   import { useReviewVacancyMutation } from '@/api/AdminApi/hooks/useReviewVacancyMutation';
-  import BaseList from '@/components/BaseList.vue';
   import AppList from '@/components/ui/AppList.vue';
+  import BaseList from '@/components/ui/BaseList.vue';
   import ProposalCard from '@/components/ui/ProposalCard.vue';
+  import { StateID } from '@/models/State';
 
   const vacancyOffersQuery = useGetVacancyOffersQuery();
 
@@ -23,9 +24,12 @@
         <ProposalCard
           :title="vacancy.title"
           :state="vacancy.state"
-          :approve="() => reviewVacancy({ vacancyId: vacancy.id, stateId: 1, comment: '' })"
+          :approve="
+            () => reviewVacancy({ vacancyId: vacancy.id, stateId: StateID.Active, comment: '' })
+          "
           :comment-reject="
-            (comment) => reviewVacancy({ vacancyId: vacancy.id, stateId: 5, comment: comment })
+            (comment) =>
+              reviewVacancy({ vacancyId: vacancy.id, stateId: StateID.Rejected, comment: comment })
           "
         >
           <template #main>

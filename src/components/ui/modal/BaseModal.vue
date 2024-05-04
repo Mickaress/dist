@@ -29,9 +29,27 @@
 </script>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .modal {
+    margin: 0 1rem;
     position: relative;
     max-width: 62.5rem;
+    overflow: auto;
+    scrollbar-color: var(--dark-gray-color) transparent;
+    scrollbar-width: thin;
+    &::-webkit-scrollbar {
+      width: 0.375rem;
+      border-radius: 0.625rem;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 0.625rem;
+      background-color: var(--dark-gray-color);
+    }
+
+    @media (width <= $tablet) {
+      max-height: 80vh;
+    }
   }
 
   .modal-background {

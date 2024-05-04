@@ -38,6 +38,8 @@
 </script>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .btn {
     position: fixed;
     right: 5rem;
@@ -52,6 +54,10 @@
     background-size: 50%;
     border-radius: 50%;
     box-shadow: 0 0 0.3125rem rgb(0 0 0 / 18%);
+
+    @media (width <= $tablet) {
+      display: none;
+    }
   }
 
   .btn-enter-active,

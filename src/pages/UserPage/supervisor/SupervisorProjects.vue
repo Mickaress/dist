@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { useCloseProjectMutation } from '@/api/SupervisorApi/hooks/useCloseProjectMutation';
   import { useGetSupervisorProjectsQuery } from '@/api/SupervisorApi/hooks/useGetSupervisorProjectsQuery';
-  import BaseList from '@/components/BaseList.vue';
   import BaseButton from '@/components/ui/BaseButton.vue';
   import BaseCard from '@/components/ui/BaseCard.vue';
+  import BaseList from '@/components/ui/BaseList.vue';
   import SkillList from '@/components/ui/SkillList.vue';
   import ConfirmModal from '@/components/ui/modal/ConfirmModal.vue';
   import { StateID } from '@/models/State';
@@ -61,7 +61,7 @@
               <span>{{ project.goal }}</span>
             </p>
             <p>
-              Период работы:
+              Сроки реализации:
               <span> {{ project.period }} </span>
             </p>
           </template>

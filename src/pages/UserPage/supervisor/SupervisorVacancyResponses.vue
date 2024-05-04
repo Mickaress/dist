@@ -2,12 +2,12 @@
   import { useGetVacancyResponsesQuery } from '@/api/SupervisorApi/hooks/useGetVacancyResponsesQuery';
   import { useReviewResponseMutation } from '@/api/SupervisorApi/hooks/useReviewResponseMutation';
   import { useGetSingleVacancyQuery } from '@/api/VacancyApi/hooks/useGetSingleVacancyQuery';
-  import BaseList from '@/components/BaseList.vue';
-  import BaseButton from '@/components/ui/BaseButton.vue';
+  import BaseList from '@/components/ui/BaseList.vue';
   import BaseStub from '@/components/ui/BaseStub.vue';
   import ProposalCard from '@/components/ui/ProposalCard.vue';
   import SkillList from '@/components/ui/SkillList.vue';
   import { FilterProposalsBy } from '@/models/Proposal';
+  import { StateID } from '@/models/State';
   import { computed } from 'vue';
   import { useRoute } from 'vue-router';
 
@@ -48,10 +48,7 @@
 <template>
   <BaseStub v-if="vacancyQuery.isLoading.value" title="Загрузка"></BaseStub>
   <template v-if="vacancyQuery.data.value">
-    <div class="header">
-      <h1>{{ vacancyQuery.data.value.title }}</h1>
-      <BaseButton variant="outlined" color="red">Закрыть вакансию</BaseButton>
-    </div>
+    <h1>{{ vacancyQuery.data.value.title }}</h1>
     <div class="wrapper">
       <RouterLink class="tab" :to="{ ...route, params: { filterBy: FilterProposalsBy.Review } }">
         Новые
@@ -75,9 +72,17 @@
           <ProposalCard
             :title="response.candidate.fio"
             :state="response.state"
-            :approve="() => reviewResponse({ responseId: response.id, stateId: 4, comment: '' })"
+            :approve="
+              () =>
+                reviewResponse({ responseId: response.id, stateId: StateID.Approved, comment: '' })
+            "
             :comment-reject="
-              (comment) => reviewResponse({ responseId: response.id, stateId: 5, comment: comment })
+              (comment) =>
+                reviewResponse({
+                  responseId: response.id,
+                  stateId: StateID.Rejected,
+                  comment: comment,
+                })
             "
           >
             <template #main>
@@ -110,6 +115,9 @@
               <p v-if="response.candidate.group">
                 Группа: <span>{{ response.candidate.group }}</span>
               </p>
+              <p v-if="response.candidate.birthday">
+                День рождения: <span>{{ response.candidate.birthday }}</span>
+              </p>
               <p>
                 Компетенции: <span>{{ response.candidate.competencies }}</span>
               </p>
@@ -126,14 +134,9 @@
 </template>
 
 <style lang="scss" scoped>
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    h1 {
-      font-size: 2.5rem;
-      font-weight: bold;
-    }
+  h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
   }
   .wrapper {
     display: flex;

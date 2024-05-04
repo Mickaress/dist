@@ -1,7 +1,7 @@
-import { AdminType, CandidateType, SupervisorType } from '@/models/User';
+import { AdminType, SpecialistType } from '@/models/User';
 
 export default interface UserApiType {
   auth(): Promise<void>;
   logout(): Promise<void>;
-  getUserInfo(): Promise<CandidateType | SupervisorType | AdminType | null>;
+  getUserInfo(): Promise<SpecialistType | AdminType | null>;
 }

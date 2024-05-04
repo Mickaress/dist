@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { MINI_PER_PAGE, PER_PAGE } from '@/constants';
-  import BaseEmptyCard from './ui/BaseEmptyCard.vue';
+  import { MINI_CARD_PER_PAGE, PER_PAGE } from '@/constants';
+  import BaseEmptyCard from './BaseEmptyCard.vue';
 
   type Props = {
     isMini: boolean;
@@ -8,7 +8,7 @@
 
   const props = defineProps<Props>();
 
-  const perPage = props.isMini ? MINI_PER_PAGE : PER_PAGE;
+  const perPage = props.isMini ? MINI_CARD_PER_PAGE : PER_PAGE;
 </script>
 
 <template>

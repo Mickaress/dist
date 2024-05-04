@@ -52,15 +52,22 @@
 </template>
 
 <style scoped lang="scss">
+  @import '@styles/breakpoints';
+
   h1 {
     font-size: 1.875rem;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
+
+    @media (width <= $mobile) {
+      max-width: 18.75rem;
+    }
   }
   .content {
-    min-width: 800px;
+    min-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+
     button {
       margin-top: 1rem;
     }

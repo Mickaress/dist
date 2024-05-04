@@ -7,7 +7,7 @@
 <style scoped>
   .badge {
     padding: 0.5rem;
-    width: 120px;
+    width: 7.5rem;
     text-align: center;
     font-size: 0.875rem;
     justify-self: end;

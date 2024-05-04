@@ -1,4 +1,4 @@
-export type UserRole = 'candidate' | 'supervisor' | 'admin';
+export type UserRole = 'specialist' | 'admin';
 
 type SharedUserType = {
   id: number;
@@ -6,8 +6,7 @@ type SharedUserType = {
   role: UserRole;
 };
 
-// candidate
-export type CandidateType = SharedUserType & {
+export type SpecialistType = SharedUserType & {
   email: string;
   phone: string;
   institute: string;
@@ -18,11 +17,4 @@ export type CandidateType = SharedUserType & {
   post?: string;
 };
 
-// supervisor
-export type SupervisorType = SharedUserType & {
-  email: string;
-  phone: string;
-};
-
-// admin
 export type AdminType = SharedUserType;
