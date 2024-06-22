@@ -141,10 +141,6 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-
-    @media (width >= $tablet) {
-      display: none;
-    }
   }
   .filter {
     background-color: var(--light-color);

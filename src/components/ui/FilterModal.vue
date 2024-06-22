@@ -72,6 +72,8 @@
 </script>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .open-project-filter-btn {
     display: flex;
     flex-direction: column;
@@ -85,6 +87,10 @@
     background-color: transparent;
     border: none;
     border-radius: 0.3125rem;
+
+    @media (width > $tablet) {
+      display: none;
+    }
 
     &:hover,
     &:focus-visible {
