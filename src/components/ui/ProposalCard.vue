@@ -30,6 +30,8 @@
   const onCommentReject = (comment: string) => {
     if (props.commentReject) props.commentReject(comment);
   };
+
+  // TODO: тесты
 </script>
 
 <template>

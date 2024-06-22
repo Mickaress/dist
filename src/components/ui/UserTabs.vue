@@ -14,6 +14,8 @@
   const { mutate: logout } = useLogoutMutation();
 
   const { data: projects } = useGetSupervisorActiveProjectsQuery();
+
+  // TODO: тесты
 </script>
 
 <template>
@@ -57,16 +59,33 @@
 </template>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
   .user-tabs {
     border: 1px solid var(--medium-gray-color);
     background: var(--light-color);
     border-radius: 0.625rem;
 
+    @media (width < $tablet) {
+      overflow-x: visible;
+      max-width: calc(100vw - 3rem);
+    }
+
     &__list {
       padding: 0 1.375rem;
       width: 100%;
 
+      @media (width < $tablet) {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        box-shadow: 0 0.25rem 0.3rem rgb(0 0 0 / 7%);
+      }
+
       &-item {
+        @media (width < $tablet) {
+          white-space: nowrap;
+        }
         &:not(:empty) {
           border-bottom: 1px solid var(--medium-gray-color);
         }
@@ -80,6 +99,10 @@
       line-height: 1.625rem;
       color: var(--text-color);
       cursor: pointer;
+
+      @media (width < $tablet) {
+        white-space: nowrap;
+      }
 
       &:hover,
       &.router-link-active {

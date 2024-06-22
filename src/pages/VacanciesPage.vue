@@ -10,6 +10,7 @@
   import BaseCheckbox from '@/components/ui/BaseCheckbox.vue';
   import BaseInput from '@/components/ui/BaseInput.vue';
   import BaseList from '@/components/ui/BaseList.vue';
+  import FilterModal from '@/components/ui/FilterModal.vue';
   import SkillList from '@/components/ui/SkillList.vue';
   import { useFilters } from '@/hooks/useFilters';
   import { vacancyRoute } from '@/router/utils/route';
@@ -42,14 +43,17 @@
     <template #header>
       <h1>Все вакансии</h1>
       <h2>На этой странице размещены открытые вакансии в НИОКР</h2>
-      <BaseInput
-        v-model="filters.title"
-        :icon="searchIconUrl"
-        placeholder="Поиск по вакансиям..."
-        type="text"
-        inputmode="email"
-        maxlength="100"
-      />
+      <div class="test">
+        <BaseInput
+          v-model="filters.title"
+          :icon="searchIconUrl"
+          placeholder="Поиск по вакансиям..."
+          type="text"
+          inputmode="email"
+          maxlength="100"
+        />
+        <FilterModal />
+      </div>
     </template>
     <template #sidebar>
       <form class="filter" @submit.prevent="filter">
@@ -153,6 +157,13 @@
 
 <style lang="scss" scoped>
   @import '@styles/breakpoints';
+
+  .test {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
 
   .filter {
     background-color: var(--light-color);

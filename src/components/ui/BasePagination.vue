@@ -74,6 +74,8 @@
     },
     { immediate: true },
   );
+
+  // TODO: тесты
 </script>
 
 <template>

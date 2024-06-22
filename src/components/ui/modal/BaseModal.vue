@@ -1,6 +1,6 @@
 <template>
   <div v-if="isShow" class="modal-background" @click="closeModal">
-    <BasePanel class="modal" @click.stop>
+    <BasePanel class="modal-content" @click.stop>
       <button class="close-btn" @click="closeModal">
         <img :src="closeIconUrl" alt="x" />
       </button>
@@ -31,7 +31,7 @@
 <style lang="scss" scoped>
   @import '@styles/breakpoints';
 
-  .modal {
+  .modal-content {
     margin: 0 1rem;
     position: relative;
     max-width: 62.5rem;
@@ -46,10 +46,6 @@
       border-radius: 0.625rem;
       background-color: var(--dark-gray-color);
     }
-
-    @media (width <= $tablet) {
-      max-height: 80vh;
-    }
   }
 
   .modal-background {
@@ -59,7 +55,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem 0;
     background-color: rgb(0 0 0 / 40%);
   }
 

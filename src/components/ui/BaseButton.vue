@@ -7,6 +7,7 @@
       width: props.fullWidth ? '100%' : undefined,
     }"
   >
+    <!-- @slot Контент внутри кнопки -->
     <slot></slot>
   </component>
 </template>
@@ -14,15 +15,31 @@
 <script setup lang="ts">
   import { withDefaults } from 'vue';
 
-  export type Variant = 'primary' | 'outlined' | 'text' | 'tag';
+  export type Variant = 'primary' | 'outlined' | 'text';
   export type Is = 'button' | 'router-link' | 'a';
   export type Color = 'red';
 
   type Props = {
+    /**
+     * Вариант кнопки для отображения
+     */
     variant?: Variant;
+    /**
+     * Тег кнопки (если нужно использовать ссылку `<a />`, а не `<button />`)
+     */
     is?: Is;
+    /**
+     * Кнопка вкл / выкл
+     */
     disabled?: boolean;
+    /**
+     * true: ширина кнопки 100%
+     * false: ширина кнопки равна контенту внутри кнопки
+     */
     fullWidth?: boolean;
+    /**
+     * Один из возможных цветов кнопки
+     */
     color?: Color;
   };
 

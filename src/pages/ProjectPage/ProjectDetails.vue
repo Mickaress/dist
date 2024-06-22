@@ -4,12 +4,13 @@
   import BasePanel from '@/components/ui/BasePanel.vue';
   import GridLayout from '@/components/ui/GridLayout.vue';
   import SkillList from '@/components/ui/SkillList.vue';
-  import { useDesktop } from '@/hooks/useBreakpoints';
+  import { useDesktop, useMobile } from '@/hooks/useBreakpoints';
   import { useRoute } from 'vue-router';
 
   const route = useRoute();
 
   const isDesktop = useDesktop();
+  const isMobile = useMobile();
 
   const projectId = Number(route.params.id);
   const projectQuery = useGetSingleProjectQuery(projectId);
@@ -38,6 +39,7 @@
   </BasePanel>
   <BasePanel v-if="projectQuery.data.value">
     <AppList
+      :width="isMobile ? 10 : 16"
       :items="[
         {
           title: 'Описание',
@@ -86,6 +88,10 @@
       min-width: 16rem;
       font-weight: 600;
       font-size: 1.125rem;
+
+      @media (width < $mobile) {
+        min-width: 10rem;
+      }
     }
   }
 </style>

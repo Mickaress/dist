@@ -4,6 +4,7 @@
   };
 
   defineProps<Props>();
+  // TODO: тесты
 </script>
 
 <template>
@@ -20,6 +21,7 @@
     width: 100%;
     text-align: left;
     border-collapse: collapse;
+    overflow-x: auto;
   }
   th {
     font-weight: bold;

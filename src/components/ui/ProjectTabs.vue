@@ -3,10 +3,7 @@
     <RouterLink class="project-tab" :to="{ name: RouteNames.PROJECT_DETAILS }">
       О НИОКР
     </RouterLink>
-    <RouterLink
-      class="project-tab"
-      :to="{ name: RouteNames.PROJECT_VACANCIES }"
-    >
+    <RouterLink class="project-tab" :to="{ name: RouteNames.PROJECT_VACANCIES }">
       Список вакансий
     </RouterLink>
   </div>
@@ -15,6 +12,8 @@
 <script setup lang="ts">
   import { RouteNames } from '@/router/types/routeNames';
   import { RouterLink } from 'vue-router';
+
+  // TODO: тесты
 </script>
 
 <style lang="scss" scoped>

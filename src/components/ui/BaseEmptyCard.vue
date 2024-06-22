@@ -18,6 +18,8 @@
     overflow: hidden;
     background: var(--medium-gray-color);
     border-radius: 0.625rem;
+    width: 600px;
+    height: 300px;
 
     &::before {
       position: absolute;

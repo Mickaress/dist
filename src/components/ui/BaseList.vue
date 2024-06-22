@@ -16,6 +16,8 @@
   withDefaults(defineProps<Props>(), {
     isMini: true,
   });
+
+  // TODO: тесты
 </script>
 
 <template>

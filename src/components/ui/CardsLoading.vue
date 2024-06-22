@@ -9,6 +9,7 @@
   const props = defineProps<Props>();
 
   const perPage = props.isMini ? MINI_CARD_PER_PAGE : PER_PAGE;
+  // TODO: тесты
 </script>
 
 <template>

@@ -20,6 +20,7 @@
   const props = withDefaults(defineProps<Props>(), {
     divider: false,
   });
+  // TODO: тесты
 </script>
 
 <style lang="scss" scoped>

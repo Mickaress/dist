@@ -11,7 +11,7 @@
   import BaseStub from '@/components/ui/BaseStub.vue';
   import GridLayout from '@/components/ui/GridLayout.vue';
   import SkillList from '@/components/ui/SkillList.vue';
-  import { useDesktop } from '@/hooks/useBreakpoints';
+  import { useDesktop, useMobile } from '@/hooks/useBreakpoints';
   import { StateClass } from '@/models/State';
   import { RouteNames } from '@/router/types/routeNames';
   import { projectRoute } from '@/router/utils/route';
@@ -26,6 +26,8 @@
   const { data: userData } = useGetUserInfoQuery();
 
   const isDesktop = useDesktop();
+
+  const isMobile = useMobile();
 
   const response = (id: number) => {
     createResponse(id);
@@ -73,6 +75,7 @@
     <BasePanel>
       <GridLayout :cols="isDesktop ? '2fr 1fr 1fr 1fr' : '1fr'">
         <AppList
+          :width="isMobile ? 10 : 16"
           :items="[
             {
               title: 'Оплата',
@@ -160,6 +163,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1rem;
     margin-top: 1.6875rem;
     margin-bottom: 1.875rem;
     &_h1 {
@@ -171,6 +175,11 @@
         font-size: 2.25rem;
         font-weight: bold;
       }
+    }
+
+    @media (width <= $mobile) {
+      align-items: normal;
+      flex-direction: column;
     }
   }
 

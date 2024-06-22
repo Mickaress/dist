@@ -67,9 +67,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    button {
-      margin-top: 1rem;
-    }
+    gap: 1.375rem;
   }
 </style>

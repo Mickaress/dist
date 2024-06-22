@@ -122,7 +122,7 @@
           />
         </div>
         <div>
-          <h1 class="header">Условия</h1>
+          <h1 class="header">Условия труда</h1>
           <BaseTextarea
             v-model="projectFormValue.conditions"
             placeholder="Например, Полный день, полная занятость."

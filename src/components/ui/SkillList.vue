@@ -39,6 +39,8 @@
   const visibleSkills = computed(() =>
     isTagsVisible.value ? skills.value : skills.value.slice(0, props.defaultVisible),
   );
+
+  // TODO: тесты
 </script>
 
 <template>

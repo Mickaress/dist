@@ -8,6 +8,7 @@
   import BaseCheckbox from '@/components/ui/BaseCheckbox.vue';
   import BaseInput from '@/components/ui/BaseInput.vue';
   import BaseList from '@/components/ui/BaseList.vue';
+  import FilterModal from '@/components/ui/FilterModal.vue';
   import SkillList from '@/components/ui/SkillList.vue';
   import { useFilters } from '@/hooks/useFilters';
   import { projectRoute } from '@/router/utils/route';
@@ -34,14 +35,17 @@
     <template #header>
       <h1>Все НИОКР</h1>
       <h2>На этой странице размещены все НИОКР</h2>
-      <BaseInput
-        v-model="filters.title"
-        :icon="searchIconUrl"
-        placeholder="Поиск по НИОКР..."
-        type="text"
-        inputmode="email"
-        maxlength="100"
-      />
+      <div class="test">
+        <BaseInput
+          v-model="filters.title"
+          :icon="searchIconUrl"
+          placeholder="Поиск по НИОКР..."
+          type="text"
+          inputmode="email"
+          maxlength="100"
+        />
+        <FilterModal />
+      </div>
     </template>
     <template #sidebar>
       <form class="filter" @submit.prevent="filter">
@@ -130,11 +134,27 @@
 </template>
 
 <style lang="scss" scoped>
+  @import '@styles/breakpoints';
+
+  .test {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+    @media (width >= $tablet) {
+      display: none;
+    }
+  }
   .filter {
     background-color: var(--light-color);
     padding: 1.25rem;
     border-radius: 0.625rem;
     border: 0.0625rem solid var(--medium-gray-color);
+
+    @media (width < $tablet) {
+      display: none;
+    }
 
     &__title {
       font-size: 1.25rem;

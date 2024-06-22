@@ -151,7 +151,7 @@
           />
         </div>
         <div>
-          <h1 class="header">Условия</h1>
+          <h1 class="header">Условия труда</h1>
           <BaseTextarea
             v-model="vacancyFormValue.conditions"
             placeholder="Например, полный день, полная занятость."
@@ -163,7 +163,7 @@
       <h1 class="header">Навыки</h1>
       <div class="wrapper">
         <SkillList :skill-ids="vacancyFormValue.skillIds" />
-        <BaseButton variant="tag" @click="isShowModal = true"> Редактировать навыки + </BaseButton>
+        <BaseButton variant="text" @click="isShowModal = true"> Редактировать навыки + </BaseButton>
       </div>
     </FormSection>
   </BasePanel>
